@@ -8,6 +8,6 @@ git add .
 git commit -m "%~1"
 
 REM Push all changes
-git push master main
+git push origin master
 
 echo Done!
