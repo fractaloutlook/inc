@@ -1,0 +1,7 @@
+had a quantum lily with 3x time crystals production --- it produces zero. So maybe limit mutations to plants that can benefit.
+
+
+the log isn't showing the 2nd plant when harvesting a linked one -- seems to be giving the stuff, just not saying so in log
+
+make those +X's also show up in the space within the garden plot, all at once with the harvesting / effect?
+s
