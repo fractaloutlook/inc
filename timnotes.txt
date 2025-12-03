@@ -4,4 +4,6 @@ had a quantum lily with 3x time crystals production --- it produces zero. So may
 the log isn't showing the 2nd plant when harvesting a linked one -- seems to be giving the stuff, just not saying so in log
 
 make those +X's also show up in the space within the garden plot, all at once with the harvesting / effect?
-s
+
+
+3 x 3 , 4 x 4, etc., not always onscreen when playing on PC monitor that is wide. All plots should be onscreen no matter the width of the screen. The side bars should probably move inward to accommodate the shape, centered? 
