@@ -7,6 +7,6 @@ git add .
 git commit -m "%~1"
 
 REM Push all changes
-git push origin master
+git push origin main
 
 echo Done!
