@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Quantum Garden</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
     <style>
 /* ============================================
    CSS RESET & BASE STYLES
@@ -162,6 +162,9 @@ html, body {
     flex-direction: column;
     overflow: hidden;
     padding: var(--spacing-md);
+    align-items: center;  /* Center garden horizontally */
+    justify-content: flex-start;
+    position: relative;  /* For harvest effects positioning */
 }
 
 /* Right Panel - Upgrades & Info */
@@ -221,20 +224,23 @@ html, body {
    RESOURCES DISPLAY
    ============================================ */
 #resources-section {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-dim);
+    position: relative;
 }
 
 .resource-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-sm);
-    margin-bottom: var(--spacing-xs);
+    padding: 4px 8px;
+    margin-bottom: 2px;
     background: var(--bg-card);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-dim);
     cursor: help;
     position: relative;
+    font-size: 0.85rem;
 }
 
 .resource-rate.negative {
@@ -317,16 +323,17 @@ html, body {
    QUANTUM CORE (Main Click Area)
    ============================================ */
 #quantum-core-section {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    border-bottom: 1px solid var(--border-dim);
 }
 
 #quantum-core {
-    width: 140px;
-    height: 140px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, var(--quantum-blue), var(--quantum-purple));
     border: 3px solid var(--quantum-blue);
@@ -334,9 +341,9 @@ html, body {
     position: relative;
     transition: transform 0.1s ease, box-shadow 0.3s ease;
     box-shadow: 
-        0 0 20px rgba(79, 195, 247, 0.3),
-        0 0 40px rgba(179, 136, 255, 0.2),
-        inset 0 0 30px rgba(255, 255, 255, 0.1);
+        0 0 15px rgba(79, 195, 247, 0.3),
+        0 0 30px rgba(179, 136, 255, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 #quantum-core:hover {
@@ -386,14 +393,14 @@ html, body {
 
 /* Burst indicator bar */
 #burst-indicator {
-    margin: var(--spacing-sm) var(--spacing-md);
+    margin: 4px var(--spacing-sm);
     text-align: center;
 }
 
 .burst-bar {
-    height: 6px;
+    height: 4px;
     background: var(--bg-card);
-    border-radius: 3px;
+    border-radius: 2px;
     overflow: hidden;
     border: 1px solid var(--border-dim);
 }
@@ -402,13 +409,13 @@ html, body {
     height: 100%;
     background: linear-gradient(90deg, var(--quantum-cyan), var(--quantum-purple));
     transition: width 0.1s ease-out;
-    box-shadow: 0 0 10px var(--quantum-cyan);
+    box-shadow: 0 0 8px var(--quantum-cyan);
 }
 
 .burst-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--text-dim);
-    margin-top: 2px;
+    margin-top: 1px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -479,19 +486,19 @@ html, body {
 }
 
 #core-power-display {
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-xs);
     text-align: center;
 }
 
 #core-power-display .label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 #core-power-display .value {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--quantum-blue);
 }
@@ -517,6 +524,72 @@ html, body {
         opacity: 0;
         transform: translateY(-60px) scale(0.5);
     }
+}
+
+/* Combo Display */
+#combo-display {
+    text-align: center;
+    margin-top: var(--spacing-sm);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--quantum-gold);
+    text-shadow: 0 0 10px var(--quantum-gold);
+    animation: combo-pulse 0.3s ease-out;
+}
+
+#combo-display.hidden {
+    display: none;
+}
+
+#combo-value {
+    font-size: 1.2rem;
+    color: var(--quantum-orange);
+}
+
+@keyframes combo-pulse {
+    0% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Burst Bar */
+#burst-container {
+    margin-top: var(--spacing-md);
+    padding: 0 var(--spacing-md);
+}
+
+.burst-label {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+#burst-bar {
+    height: 6px;
+    background: var(--bg-dark);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--border-dim);
+}
+
+#burst-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--quantum-purple), var(--quantum-cyan));
+    border-radius: 3px;
+    transition: width 0.15s ease-out;
+}
+
+#burst-fill.charged {
+    background: linear-gradient(90deg, var(--quantum-gold), var(--quantum-orange));
+    animation: burst-ready 0.5s ease-in-out infinite;
+}
+
+@keyframes burst-ready {
+    0%, 100% { box-shadow: 0 0 5px var(--quantum-gold); }
+    50% { box-shadow: 0 0 15px var(--quantum-gold); }
 }
 
 /* ============================================
@@ -584,10 +657,14 @@ html, body {
 
 #garden-grid {
     display: grid;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
     flex: 1;
-    align-content: start;
+    align-content: center;
+    justify-content: center;
     position: relative;
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-sm);
 }
 
 .garden-plot {
@@ -791,11 +868,16 @@ html, body {
 .mutation-indicator {
     position: absolute;
     top: 2px;
-    right: 2px;
+    left: 4px;
     font-size: 0.8rem;
     animation: mutation-sparkle 2s ease-in-out infinite;
     text-shadow: 0 0 6px var(--mutation-color, gold);
     z-index: 10;
+}
+
+/* If both mutated and entangled, shift the entanglement link right */
+.garden-plot.mutated.entangled::before {
+    left: 22px;
 }
 
 @keyframes mutation-sparkle {
@@ -858,15 +940,26 @@ html, body {
 }
 
 /* Harvest floating numbers */
+#harvest-effects-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 30;
+    overflow: visible;
+}
+
 .harvest-float {
     position: absolute;
     color: var(--quantum-green);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: bold;
     pointer-events: none;
     animation: harvest-float-up 1.2s ease-out forwards;
     text-shadow: 0 0 6px var(--quantum-green), 0 2px 4px rgba(0,0,0,0.5);
-    z-index: 25;
+    z-index: 35;
     white-space: nowrap;
 }
 
@@ -1038,6 +1131,8 @@ html, body {
     cursor: pointer;
     transition: var(--transition-fast);
     flex: 1;
+    min-height: 36px;
+    box-sizing: border-box;
 }
 
 .generator-buy-btn.small {
@@ -1045,23 +1140,37 @@ html, body {
     min-width: 50px;
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 0.8rem;
+    min-height: 36px;
+}
+
+.generator-buy-btn.max-btn {
+    flex: 0;
+    min-width: 58px;
+    width: 58px;
+    padding: 2px 4px;
+    font-size: 0.7rem;
+    min-height: 36px;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .generator-buttons {
     display: flex;
     gap: var(--spacing-xs);
     margin-top: var(--spacing-sm);
+    min-height: 36px;
 }
 
 .generator-buy-btn:hover:not(:disabled) {
     filter: brightness(1.2);
-    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
 }
 
 .generator-buy-btn:disabled {
     background: var(--bg-card);
     color: var(--text-dim);
     cursor: not-allowed;
+    min-height: 36px;
 }
 
 /* ============================================
@@ -1121,27 +1230,29 @@ html, body {
    LOG / MESSAGES
    ============================================ */
 #log-section {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-top: 1px solid var(--border-dim);
-    max-height: 150px;
+    flex: 1;
+    min-height: 120px;
     overflow-y: auto;
 }
 
 #log-section h4 {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--text-dim);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 4px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .log-entry {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    padding: var(--spacing-xs) 0;
+    padding: 2px 0;
     border-bottom: 1px solid var(--border-dim);
     opacity: 0;
     animation: fadeIn 0.3s ease forwards;
+    line-height: 1.3;
 }
 
 .log-entry:last-child {
@@ -1164,6 +1275,15 @@ html, body {
     color: var(--quantum-purple);
     font-style: italic;
     text-shadow: 0 0 10px var(--quantum-purple);
+}
+
+.log-entry.tip {
+    color: var(--quantum-cyan);
+    background: rgba(24, 255, 255, 0.1);
+    padding: 4px 6px;
+    border-radius: 4px;
+    border-left: 2px solid var(--quantum-cyan);
+    margin: 4px 0;
 }
 
 @keyframes fadeIn {
@@ -1199,6 +1319,80 @@ html, body {
 .stat-value {
     color: var(--text-primary);
     font-weight: 500;
+}
+
+/* Prestige / Reality Collapse UI */
+.prestige-section {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(75, 0, 130, 0.15));
+    border: 1px solid var(--quantum-purple);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.prestige-section h4 {
+    color: var(--quantum-purple);
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 0 10px var(--quantum-purple);
+}
+
+.prestige-info {
+    display: grid;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.prestige-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.prestige-stat .label {
+    color: var(--text-secondary);
+}
+
+.prestige-stat .value {
+    color: var(--quantum-purple);
+    font-weight: bold;
+}
+
+.prestige-stat .value.highlight {
+    color: var(--quantum-gold);
+    text-shadow: 0 0 8px var(--quantum-gold);
+}
+
+.collapse-btn {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, var(--quantum-purple), #4a0080);
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.collapse-btn:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px var(--quantum-purple);
+}
+
+.collapse-btn:disabled {
+    background: var(--bg-card);
+    color: var(--text-dim);
+    cursor: not-allowed;
+}
+
+.collapse-warning {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: var(--spacing-sm);
 }
 
 /* Achievement badges */
@@ -1546,8 +1740,8 @@ html, body {
 
 /* Coherence bar */
 #coherence-bar-container {
-    margin: var(--spacing-md);
-    padding: var(--spacing-sm);
+    margin: var(--spacing-sm);
+    padding: 6px 8px;
     background: var(--bg-card);
     border-radius: var(--radius-md);
     border: 1px solid var(--border-dim);
@@ -1563,17 +1757,32 @@ html, body {
     display: none;
 }
 
+#coherence-bar-container.coherence-maxed {
+    animation: coherence-flash 0.5s ease-out;
+}
+
+@keyframes coherence-flash {
+    0%, 100% { 
+        box-shadow: none; 
+        border-color: var(--border-dim);
+    }
+    50% { 
+        box-shadow: 0 0 20px var(--quantum-cyan), inset 0 0 10px rgba(24, 255, 255, 0.2);
+        border-color: var(--quantum-cyan);
+    }
+}
+
 .coherence-label {
     display: flex;
     justify-content: space-between;
-    font-size: 0.75rem;
-    margin-bottom: var(--spacing-xs);
+    font-size: 0.7rem;
+    margin-bottom: 2px;
 }
 
 .coherence-bar {
-    height: 8px;
+    height: 6px;
     background: var(--bg-dark);
-    border-radius: 4px;
+    border-radius: 3px;
     overflow: hidden;
 }
 
@@ -1587,9 +1796,9 @@ html, body {
 .efficiency-indicator {
     display: flex;
     justify-content: space-between;
-    font-size: 0.7rem;
-    margin-top: var(--spacing-xs);
-    padding-top: var(--spacing-xs);
+    font-size: 0.65rem;
+    margin-top: 4px;
+    padding-top: 4px;
     border-top: 1px solid var(--border-dim);
     color: var(--text-dim);
 }
@@ -1617,54 +1826,132 @@ html, body {
     50% { opacity: 0.5; }
 }
 
+/* Next Unlock Indicator */
+#next-unlock-indicator {
+    margin: var(--spacing-sm);
+    padding: 6px 8px;
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(79, 195, 247, 0.1) 100%);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-dim);
+    border-left: 3px solid var(--quantum-blue);
+}
+
+#next-unlock-indicator.hidden {
+    display: none;
+}
+
+.next-unlock-label {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.next-unlock-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--quantum-blue);
+    margin-bottom: 4px;
+}
+
+.next-unlock-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.next-unlock-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--bg-dark);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.next-unlock-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-cyan));
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+.next-unlock-percent {
+    font-size: 0.65rem;
+    font-weight: bold;
+    color: var(--quantum-blue);
+    min-width: 30px;
+    text-align: right;
+}
+
+/* Milestone celebration pulse */
+@keyframes milestone-pulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(79, 195, 247, 0.4);
+    }
+    50% { 
+        box-shadow: 0 0 20px 5px rgba(79, 195, 247, 0.6);
+    }
+}
+
+#next-unlock-indicator.near-unlock {
+    animation: milestone-pulse 1.5s ease-in-out infinite;
+    border-left-color: var(--quantum-green);
+}
+
+#next-unlock-indicator.near-unlock .next-unlock-fill {
+    background: linear-gradient(90deg, var(--quantum-green), var(--quantum-cyan));
+}
+
 /* Event notification */
 .quantum-event {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg-panel);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--bg-panel) 0%, rgba(179, 136, 255, 0.15) 100%);
     border: 2px solid var(--quantum-purple);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    max-width: 400px;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm);
     z-index: 300;
     text-align: center;
     animation: event-appear 0.3s ease-out;
-    box-shadow: 0 0 50px rgba(179, 136, 255, 0.5);
+    box-shadow: 0 0 20px rgba(179, 136, 255, 0.5);
 }
 
 @keyframes event-appear {
     from {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
+        transform: scale(0.9);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(1);
     }
 }
 
 .quantum-event h3 {
     color: var(--quantum-purple);
-    margin-bottom: var(--spacing-md);
-    font-size: 1.2rem;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
 }
 
 .quantum-event p {
     color: var(--text-secondary);
-    margin-bottom: var(--spacing-lg);
-    line-height: 1.5;
+    margin-bottom: 6px;
+    line-height: 1.3;
+    font-size: 0.75rem;
 }
 
 .quantum-event button {
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: 4px var(--spacing-md);
     background: linear-gradient(135deg, var(--quantum-purple), var(--quantum-blue));
     border: none;
     border-radius: var(--radius-sm);
     color: white;
     font-weight: 600;
     cursor: pointer;
+    font-size: 0.75rem;
 }
 
 /* Probability tooltip */
@@ -1726,9 +2013,195 @@ html, body {
     20% { transform: translateX(2px); }
     40% { transform: translateX(-2px); }
 }
+
+/* Narrative Ticker */
+#narrative-ticker {
+    width: 100%;
+    height: 24px;
+    background: linear-gradient(90deg, var(--bg-dark) 0%, rgba(179, 136, 255, 0.1) 50%, var(--bg-dark) 100%);
+    border-bottom: 1px solid var(--quantum-purple);
+    overflow: hidden;
+    position: relative;
+}
+
+#ticker-content {
+    position: absolute;
+    white-space: nowrap;
+    animation: ticker-scroll 60s linear infinite;
+    color: var(--quantum-purple);
+    font-size: 0.75rem;
+    line-height: 24px;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+}
+
+#ticker-content.paused {
+    animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+}
+
+/* Low coherence text glitch effect */
+.glitch-text {
+    position: relative;
+    animation: text-glitch 0.3s infinite;
+}
+
+@keyframes text-glitch {
+    0%, 90%, 100% { 
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+    92% { 
+        opacity: 0.8;
+        transform: translateX(-2px);
+        filter: hue-rotate(90deg);
+    }
+    94% { 
+        opacity: 0.9;
+        transform: translateX(2px) skewX(5deg);
+        filter: hue-rotate(-90deg);
+    }
+    96% { 
+        opacity: 0.7;
+        transform: translateX(-1px);
+    }
+}
+
+/* Severe glitch for very low coherence */
+.glitch-severe {
+    animation: severe-glitch 0.15s infinite;
+}
+
+@keyframes severe-glitch {
+    0%, 100% { 
+        opacity: 1;
+        transform: none;
+        text-shadow: none;
+    }
+    25% { 
+        opacity: 0.6;
+        transform: translateX(-3px) skewX(-5deg);
+        text-shadow: 2px 0 var(--quantum-red), -2px 0 var(--quantum-cyan);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: translateX(3px) skewY(2deg);
+        text-shadow: -2px 0 var(--quantum-purple), 2px 0 var(--quantum-green);
+    }
+    75% { 
+        opacity: 0.5;
+        transform: translateX(-2px);
+        text-shadow: 1px 2px var(--quantum-red);
+    }
+}
+
+/* Reality fracture overlay for extremely low coherence */
+#reality-fracture-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(179, 136, 255, 0.03) 2px,
+        rgba(179, 136, 255, 0.03) 4px
+    );
+}
+
+#reality-fracture-overlay.active {
+    opacity: 1;
+    animation: reality-flicker 2s infinite;
+}
+
+@keyframes reality-flicker {
+    0%, 95%, 100% { opacity: 0.3; }
+    96% { opacity: 0.6; }
+    97% { opacity: 0.2; }
+    98% { opacity: 0.8; }
+}
+
+/* Story modal for major narrative beats */
+#story-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#story-modal.active {
+    display: flex;
+}
+
+#story-content {
+    max-width: 600px;
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: var(--text-primary);
+}
+
+#story-content h2 {
+    color: var(--quantum-purple);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.5rem;
+    text-shadow: 0 0 20px var(--quantum-purple);
+}
+
+#story-content p {
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+    font-size: 1rem;
+    opacity: 0;
+    animation: story-fade-in 1s forwards;
+}
+
+#story-content p:nth-child(2) { animation-delay: 0.5s; }
+#story-content p:nth-child(3) { animation-delay: 1s; }
+#story-content p:nth-child(4) { animation-delay: 1.5s; }
+#story-content p:nth-child(5) { animation-delay: 2s; }
+
+@keyframes story-fade-in {
+    to { opacity: 1; }
+}
+
+#story-content button {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: linear-gradient(135deg, var(--quantum-purple), var(--quantum-blue));
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    animation: story-fade-in 1s forwards;
+    animation-delay: 2.5s;
+}
     </style>
 </head>
 <body>
+    <!-- Narrative Ticker - mysterious messages scroll across -->
+    <div id="narrative-ticker">
+        <div id="ticker-content"></div>
+    </div>
+    
     <div id="game-container">
         <!-- Header -->
         <header id="header">
@@ -1747,6 +2220,17 @@ html, body {
                 <section id="resources-section">
                     <!-- Resources rendered by JS -->
                 </section>
+                
+                <div id="next-unlock-indicator">
+                    <div class="next-unlock-label">🎯 Next Unlock</div>
+                    <div class="next-unlock-name" id="next-unlock-name">Loading...</div>
+                    <div class="next-unlock-progress">
+                        <div class="next-unlock-bar">
+                            <div class="next-unlock-fill" id="next-unlock-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="next-unlock-percent" id="next-unlock-percent">0%</span>
+                    </div>
+                </div>
                 
                 <div id="coherence-bar-container" class="hidden">
                     <div class="coherence-label">
@@ -1768,6 +2252,15 @@ html, body {
                         <div class="label">Click Power</div>
                         <div class="value" id="click-power-value">1</div>
                     </div>
+                    <div id="combo-display" class="hidden">
+                        <span id="combo-value">1</span>x Combo!
+                    </div>
+                    <div id="burst-container">
+                        <div class="burst-label">Quantum Burst</div>
+                        <div id="burst-bar">
+                            <div id="burst-fill"></div>
+                        </div>
+                    </div>
                 </section>
                 
                 <section id="log-section">
@@ -1788,6 +2281,7 @@ html, body {
                 <div id="garden-grid">
                     <!-- Garden plots rendered by JS -->
                 </div>
+                <div id="harvest-effects-container"></div>
                 <svg id="entanglement-lines" class="entanglement-overlay"></svg>
             </section>
 
@@ -1828,6 +2322,16 @@ html, body {
     
     <!-- Global Tooltip -->
     <div id="tooltip"></div>
+    
+    <!-- Reality Fracture Overlay (low coherence effect) -->
+    <div id="reality-fracture-overlay"></div>
+    
+    <!-- Story Modal for major narrative moments -->
+    <div id="story-modal">
+        <div id="story-content">
+            <!-- Populated by JS -->
+        </div>
+    </div>
 
 <script>
 // ============================================
@@ -1906,10 +2410,38 @@ const Utils = {
 const TooltipManager = (() => {
     let tooltipEl = null;
     let currentTarget = null;
+    let checkInterval = null;
     
     function init() {
         tooltipEl = document.getElementById('tooltip');
+        
+        // Periodically check if tooltip should be hidden
+        // This catches cases where mouseleave doesn't fire (e.g., element removed)
+        checkInterval = setInterval(() => {
+            if (currentTarget && tooltipEl?.classList.contains('visible')) {
+                // Check if mouse is still over the target
+                const rect = currentTarget.getBoundingClientRect();
+                const mouseX = lastMouseX;
+                const mouseY = lastMouseY;
+                
+                // If target is no longer in DOM or mouse is far from it, hide tooltip
+                if (!document.body.contains(currentTarget) ||
+                    mouseX < rect.left - 50 || mouseX > rect.right + 50 ||
+                    mouseY < rect.top - 50 || mouseY > rect.bottom + 50) {
+                    hide();
+                }
+            }
+        }, 500);
+        
+        // Track mouse position
+        document.addEventListener('mousemove', (e) => {
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        });
     }
+    
+    let lastMouseX = 0;
+    let lastMouseY = 0;
     
     function show(target, content, detail = null) {
         if (!tooltipEl) return;
@@ -2061,7 +2593,16 @@ const ResourceGainTracker = (() => {
     // Show floating harvest numbers at a position
     function showHarvestFloat(plotIndex, yields) {
         const plotEl = document.querySelector(`.garden-plot[data-index="${plotIndex}"]`);
-        if (!plotEl) return;
+        const container = document.getElementById('harvest-effects-container');
+        if (!plotEl || !container) return;
+        
+        // Get plot position relative to center panel
+        const centerPanel = document.getElementById('center-panel');
+        const panelRect = centerPanel.getBoundingClientRect();
+        const plotRect = plotEl.getBoundingClientRect();
+        
+        const centerX = plotRect.left - panelRect.left + plotRect.width / 2;
+        const startY = plotRect.top - panelRect.top + plotRect.height / 3;
         
         let yOffset = 0;
         
@@ -2072,20 +2613,20 @@ const ResourceGainTracker = (() => {
             const floater = document.createElement('div');
             floater.className = 'harvest-float';
             floater.textContent = `${data.icon}+${Utils.formatNumber(amount, 0)}`;
-            floater.style.left = '50%';
-            floater.style.top = (40 + yOffset) + '%';
+            floater.style.left = centerX + 'px';
+            floater.style.top = (startY + yOffset) + 'px';
             floater.style.transform = 'translateX(-50%)';
             floater.style.animationDelay = (i * 0.1) + 's';
             
-            plotEl.appendChild(floater);
+            container.appendChild(floater);
             
-            yOffset += 15;
+            yOffset += 20;
             
             // Also add to left panel tracker
             addGain(resourceId, amount);
             
             // Remove after animation
-            setTimeout(() => floater.remove(), 1200 + i * 100);
+            setTimeout(() => floater.remove(), 1500 + i * 100);
         });
     }
     
@@ -2466,6 +3007,57 @@ const GameData = {
             requires: ['largerGarden2'],
             unlocked: false,
             purchased: false
+        },
+        
+        // PRESTIGE SYSTEM
+        realityAwareness: {
+            id: 'realityAwareness',
+            name: 'Reality Awareness',
+            icon: '🔮',
+            description: 'Become aware of the fragile nature of reality. Unlocks Reality Collapse.',
+            cost: { energy: 100000, knowledge: 500, entanglement: 50 },
+            effect: { unlockPrestige: true },
+            unlocked: false,
+            unlockAt: { resource: 'energy', amount: 75000 },
+            purchased: false
+        },
+        
+        // Post-prestige upgrades (unlocked by fragments)
+        fragmentBoost1: {
+            id: 'fragmentBoost1',
+            name: 'Echoes of Past Realities',
+            icon: '💠',
+            description: 'Each Reality Fragment grants +5% base production',
+            cost: { fragments: 5 },
+            effect: { fragmentProductionBonus: 0.05 },
+            unlocked: false,
+            unlockAt: { resource: 'fragments', amount: 3 },
+            purchased: false,
+            persistent: true  // Survives reality collapse
+        },
+        fragmentBoost2: {
+            id: 'fragmentBoost2',
+            name: 'Quantum Memory',
+            icon: '🧠',
+            description: 'Start each reality with 100 energy and 10 seeds',
+            cost: { fragments: 10 },
+            effect: { startingBonus: { energy: 100, seeds: 10 } },
+            requires: ['fragmentBoost1'],
+            unlocked: false,
+            purchased: false,
+            persistent: true
+        },
+        fragmentBoost3: {
+            id: 'fragmentBoost3',
+            name: 'Temporal Persistence',
+            icon: '⏳',
+            description: 'Retain 10% of your Time Crystals through Reality Collapse',
+            cost: { fragments: 25 },
+            effect: { retainTimePercent: 0.1 },
+            requires: ['fragmentBoost2'],
+            unlocked: false,
+            purchased: false,
+            persistent: true
         }
     },
     
@@ -2790,6 +3382,96 @@ const GameData = {
             description: 'Witness 10 plant mutations',
             icon: '🌈',
             check: () => StateManager.get('stats.mutationsWitnessed') >= 10
+        },
+        mutationMaster: {
+            id: 'mutationMaster',
+            name: 'Mutation Master',
+            description: 'Witness 50 plant mutations',
+            icon: '🧪',
+            check: () => StateManager.get('stats.mutationsWitnessed') >= 50
+        },
+        luckyWinner: {
+            id: 'luckyWinner',
+            name: 'Lucky Winner',
+            description: 'Hit the jackpot in the Quantum Lottery',
+            icon: '🎰',
+            secret: true,
+            check: () => StateManager.get('stats.lotteryJackpot') || false
+        },
+        
+        // Prestige achievements
+        firstCollapse: {
+            id: 'firstCollapse',
+            name: 'Reality Shattered',
+            description: 'Collapse reality for the first time',
+            icon: '💠',
+            check: () => (StateManager.get('stats.totalCollapses') || 0) >= 1
+        },
+        realityVeteran: {
+            id: 'realityVeteran',
+            name: 'Reality Veteran',
+            description: 'Collapse reality 5 times',
+            icon: '🔮',
+            check: () => (StateManager.get('stats.totalCollapses') || 0) >= 5
+        },
+        fragmentHoarder: {
+            id: 'fragmentHoarder',
+            name: 'Fragment Hoarder',
+            description: 'Accumulate 50 Reality Fragments',
+            icon: '💎',
+            check: () => (ResourceManager.get('fragments') || 0) >= 50
+        },
+        speedCollapse: {
+            id: 'speedCollapse',
+            name: 'Speed Collapser',
+            description: 'Collapse reality within 30 minutes of a previous collapse',
+            icon: '⚡',
+            secret: true,
+            check: () => {
+                // Check if we've collapsed at least twice and the last two were close together
+                const totalCollapses = StateManager.get('stats.totalCollapses') || 0;
+                const fastCollapse = StateManager.get('stats.fastCollapse') || false;
+                return totalCollapses >= 2 && fastCollapse;
+            }
+        },
+        
+        // Narrative achievements
+        quantumWitness: {
+            id: 'quantumWitness',
+            name: 'Quantum Witness',
+            description: 'Experience 50 quantum events',
+            icon: '👁️',
+            check: () => (StateManager.get('stats.quantumEventsWitnessed') || 0) >= 50
+        },
+        storySeeker: {
+            id: 'storySeeker',
+            name: 'Story Seeker',
+            description: 'Unlock 3 major story moments',
+            icon: '📖',
+            check: () => (StateManager.get('triggeredStories') || []).length >= 3
+        },
+        theObserver: {
+            id: 'theObserver',
+            name: 'The Observer',
+            description: 'Use the observer effect to grow plants for 10 minutes total',
+            icon: '🔭',
+            check: () => (StateManager.get('stats.totalObservationTime') || 0) >= 600
+        },
+        realityBender: {
+            id: 'realityBender',
+            name: 'Reality Bender',
+            description: 'Reach Reality Level 10',
+            icon: '🌀',
+            secret: true,
+            check: () => (StateManager.get('stats.realityLevel') || 0) >= 10
+        },
+        transcendent: {
+            id: 'transcendent',
+            name: 'Transcendent',
+            description: 'Generate 1 trillion total energy',
+            icon: '∞',
+            secret: true,
+            check: () => StateManager.get('resources.energy.total') >= 1000000000000
         }
     }
 };
@@ -2853,8 +3535,15 @@ const StateManager = (() => {
         
         // Ensure all expected properties exist
         if (!state.settings) state.settings = GameData.initialState.settings;
-        if (!state.stats) state.stats = GameData.initialState.stats;
+        if (!state.stats) state.stats = Utils.deepClone(GameData.initialState.stats);
         if (!state.achievements) state.achievements = {};
+        
+        // Ensure core stats exist (even if stats object exists but is incomplete)
+        if (state.stats.totalClicks === undefined) state.stats.totalClicks = 0;
+        if (state.stats.totalPlantsHarvested === undefined) state.stats.totalPlantsHarvested = 0;
+        if (state.stats.quantumEventsWitnessed === undefined) state.stats.quantumEventsWitnessed = 0;
+        if (state.stats.startDate === undefined) state.stats.startDate = Date.now();
+        if (state.stats.playTime === undefined) state.stats.playTime = 0;
         
         // Ensure new settings exist for existing saves
         if (state.settings.autoHarvestEnabled === undefined) {
@@ -2997,10 +3686,16 @@ const StateManager = (() => {
         }
     }
     
+    function setState(newState) {
+        state = newState;
+        events.emit('stateChanged', state);
+    }
+    
     return {
         initialize,
         get,
         set,
+        setState,
         save,
         reset,
         canSave,
@@ -3027,6 +3722,11 @@ const ResourceManager = (() => {
         if (amount > 0) {
             const total = StateManager.get(`resources.${resourceId}.total`) || 0;
             StateManager.set(`resources.${resourceId}.total`, total + amount);
+            
+            // Track last significant gain for déjà vu event
+            if (amount >= 10) {
+                StateManager.set('lastResourceGain', { resource: resourceId, amount: amount });
+            }
         }
         
         events.emit('changed', { resourceId, amount: newAmount, delta: amount });
@@ -3223,6 +3923,11 @@ const GeneratorManager = (() => {
                 rate *= 1.5;
             }
             
+            // Apply Reality Fragment bonus (from prestige)
+            if (typeof PrestigeManager !== 'undefined') {
+                rate *= PrestigeManager.getProductionMultiplier();
+            }
+            
             // COHERENCE EFFECT: Low coherence reduces generator output
             // At 100% coherence: full production
             // At 50% coherence: 90% production  
@@ -3403,6 +4108,7 @@ const GardenManager = (() => {
     let entanglementSource = null;
     let autoHarvestTimer = 0;
     let autoPlantTimer = 0;
+    let autoHarvestInProgress = false;
     
     function getPlot(index) {
         return StateManager.get(`garden.plots.${index}`);
@@ -3445,6 +4151,22 @@ const GardenManager = (() => {
             effect: 'rare',
             multiplier: 2,
             description: '2× knowledge & entanglement'
+        },
+        crystalline: {
+            name: 'Crystalline',
+            icon: '💎',
+            color: '#E0FFFF',
+            effect: 'crystalline',
+            multiplier: 2,
+            description: '2× time + bonus energy'
+        },
+        echoing: {
+            name: 'Echoing',
+            icon: '🔊',
+            color: '#7B68EE',
+            effect: 'echo',
+            multiplier: 1.3,
+            description: '1.3× all + grants seeds'
         }
     };
     
@@ -3469,6 +4191,21 @@ const GardenManager = (() => {
                 for (const key in result) {
                     result[key] = Math.floor(result[key] * mutation.multiplier);
                 }
+                break;
+            case 'crystalline':
+                // 2× time crystals + bonus energy equal to 50% of time crystals
+                if (result.time) {
+                    const bonusEnergy = Math.floor(result.time * 0.5);
+                    result.time = Math.floor(result.time * mutation.multiplier);
+                    result.energy = (result.energy || 0) + bonusEnergy;
+                }
+                break;
+            case 'echo':
+                // 1.3× all + grants 1-2 seeds
+                for (const key in result) {
+                    result[key] = Math.floor(result[key] * mutation.multiplier);
+                }
+                result.seeds = (result.seeds || 0) + 1 + (Math.random() < 0.3 ? 1 : 0);
                 break;
         }
         
@@ -3496,11 +4233,26 @@ const GardenManager = (() => {
         const mutationChance = 0.02 + (coherence / 100) * 0.08; // 2-10% based on coherence
         const isMutated = Math.random() < mutationChance;
         
-        // Mutation type (if mutated)
+        // Mutation type (if mutated) - only assign mutations that benefit this plant!
         let mutation = null;
         if (isMutated) {
-            const mutations = ['golden', 'prismatic', 'temporal', 'void'];
-            mutation = mutations[Math.floor(Math.random() * mutations.length)];
+            const plantData = GameData.generators[generatorId];
+            const yields = plantData.harvestYield || {};
+            
+            // Build list of valid mutations based on what this plant produces
+            const validMutations = ['golden', 'prismatic']; // These always help (energy/all)
+            
+            // Temporal mutation only helps if plant produces time crystals
+            if (yields.time) {
+                validMutations.push('temporal');
+            }
+            
+            // Void mutation only helps if plant produces knowledge or entanglement
+            if (yields.knowledge || yields.entanglement) {
+                validMutations.push('void');
+            }
+            
+            mutation = validMutations[Math.floor(Math.random() * validMutations.length)];
             
             // Track mutation stat
             const mutationsWitnessed = StateManager.get('stats.mutationsWitnessed') || 0;
@@ -3552,10 +4304,13 @@ const GardenManager = (() => {
         // Handle entangled partner
         const partnerId = plot.entangledWith;
         let partnerYield = null;
+        let partnerPlant = null;  // Track partner plant type for logging
         
         if (partnerId !== null) {
             const partner = getPlot(partnerId);
             if (partner && partner.plant && partner.entangledWith === plotIndex) {
+                partnerPlant = partner.plant;  // Save before clearing
+                
                 // Harvest partner too!
                 partnerYield = QuantumMechanics.collapseYield(partner.plant);
                 
@@ -3601,8 +4356,8 @@ const GardenManager = (() => {
         const harvested = StateManager.get('stats.totalPlantsHarvested') || 0;
         StateManager.set('stats.totalPlantsHarvested', harvested + (partnerYield ? 2 : 1));
         
-        events.emit('harvested', { plotIndex, plant: plot.plant, yield: actualYield, partnerYield });
-        return actualYield; // Return actual yield for display
+        events.emit('harvested', { plotIndex, plant: plot.plant, yield: actualYield, partnerYield, partnerPlant, partnerId });
+        return { yield: actualYield, partnerYield, partnerPlant, partnerId }; // Return both yields and partner info
     }
     
     function entangle(plotIndex1, plotIndex2) {
@@ -3685,7 +4440,7 @@ const GardenManager = (() => {
         }
         
         // Auto-harvest
-        if (UpgradeManager.isPurchased('autoHarvest') && StateManager.get('settings.autoHarvestEnabled')) {
+        if (UpgradeManager.isPurchased('autoHarvest') && StateManager.get('settings.autoHarvestEnabled') && !autoHarvestInProgress) {
             autoHarvestTimer += deltaTime;
             if (autoHarvestTimer >= 10) {
                 autoHarvestTimer = 0;
@@ -3693,8 +4448,8 @@ const GardenManager = (() => {
             }
         }
         
-        // Auto-plant
-        if (UpgradeManager.isPurchased('autoPlant') && StateManager.get('settings.autoPlantEnabled')) {
+        // Auto-plant (only if not in middle of auto-harvest cycle)
+        if (UpgradeManager.isPurchased('autoPlant') && StateManager.get('settings.autoPlantEnabled') && !autoHarvestInProgress) {
             autoPlantTimer += deltaTime;
             if (autoPlantTimer >= 5) {
                 autoPlantTimer = 0;
@@ -3724,20 +4479,133 @@ const GardenManager = (() => {
     
     function autoHarvestAll() {
         const plots = StateManager.get('garden.plots') || [];
-        let harvestedCount = 0;
+        const readyIndices = [];
         
+        // Collect indices of all ready plants (in order for left->right, top->bottom)
         plots.forEach((plot, index) => {
             if (plot.plant && plot.progress >= 1) {
-                const result = harvest(index);
-                if (result) harvestedCount++;
+                readyIndices.push(index);
             }
         });
         
-        if (harvestedCount > 0) {
-            UI.addLogEntry(`🤖 Auto-harvested ${harvestedCount} plant(s)`, 'success');
+        if (readyIndices.length === 0) return;
+        
+        // Set flag to prevent overlapping harvests AND prevent garden re-renders
+        autoHarvestInProgress = true;
+        
+        // Track which plots we've already processed (including via entanglement)
+        const alreadyHarvested = new Set();
+        
+        UI.addLogEntry(`🤖 Auto-harvesting ${readyIndices.length} plant(s)...`, 'success');
+        
+        let animationStep = 0;
+        
+        // Process each ready plant in order
+        readyIndices.forEach((plotIndex) => {
+            // Skip if already harvested (e.g., via entanglement with earlier plant)
+            if (alreadyHarvested.has(plotIndex)) return;
+            
+            const plot = plots[plotIndex];
+            const entangledIndex = plot.entangledWith;
+            const entangledPlot = entangledIndex !== null ? plots[entangledIndex] : null;
+            const entangledIsReady = entangledPlot && entangledPlot.plant && entangledPlot.progress >= 1;
+            
+            // IMPORTANT: Decide NOW if partner should be harvested (before adding to set)
+            const shouldHarvestPartner = entangledIsReady && entangledIndex !== null;
+            
+            // Mark as harvested BEFORE scheduling (to prevent duplicate processing)
+            alreadyHarvested.add(plotIndex);
+            if (shouldHarvestPartner) {
+                alreadyHarvested.add(entangledIndex);
+            }
+            
+            // Schedule this harvest at the current animation step
+            const delay = animationStep * 150;
+            
+            setTimeout(() => {
+                // 1. Remove plant visually and show harvest effect
+                harvestPlotVisually(plotIndex);
+                
+                // If entangled partner is ready, harvest it visually at the SAME time
+                if (shouldHarvestPartner) {
+                    harvestPlotVisually(entangledIndex);
+                }
+                
+                // 2. Actually harvest (this handles entangled partner internally and clears entanglement state)
+                const result = harvest(plotIndex);
+                
+                // 3. Update entanglement lines (AFTER harvest clears entanglement from state)
+                UI.updateEntanglementLines();
+                
+                // 4. Show floating numbers
+                if (result && result.yield) {
+                    ResourceGainTracker.showHarvestFloat(plotIndex, result.yield);
+                }
+                if (result && result.partnerYield && entangledIndex !== null) {
+                    ResourceGainTracker.showHarvestFloat(entangledIndex, result.partnerYield);
+                }
+                
+                UI.renderResources();
+            }, delay);
+            
+            animationStep++;
+        });
+        
+        // After all harvesting animations complete, wait then replant all at once
+        const totalHarvestTime = animationStep * 150 + 500;
+        setTimeout(() => {
+            // Check if auto-plant is enabled
+            if (UpgradeManager.isPurchased('autoPlant') && StateManager.get('settings.autoPlantEnabled')) {
+                autoPlantAll();
+            }
+            // Full re-render to show planted state (or empty if no auto-plant)
             UI.renderGarden();
-            UI.renderResources();
+            
+            // Clear flag - harvest cycle complete
+            autoHarvestInProgress = false;
+        }, totalHarvestTime);
+    }
+    
+    // Helper: Remove plant visually and show harvest effect
+    function harvestPlotVisually(plotIndex) {
+        const plotEl = document.querySelector(`.garden-plot[data-index="${plotIndex}"]`);
+        if (!plotEl) return;
+        
+        // Find and REMOVE the plant element entirely (class is 'plot-plant', not 'plant-emoji')
+        const plantEl = plotEl.querySelector('.plot-plant');
+        if (plantEl) {
+            plantEl.remove();
         }
+        
+        // Also remove the progress bar and timer
+        const progressBar = plotEl.querySelector('.plot-progress');
+        if (progressBar) {
+            progressBar.remove();
+        }
+        const timer = plotEl.querySelector('.plot-timer');
+        if (timer) {
+            timer.remove();
+        }
+        
+        // Remove mutation indicator if present
+        const mutationIndicator = plotEl.querySelector('.mutation-indicator');
+        if (mutationIndicator) {
+            mutationIndicator.remove();
+        }
+        
+        // Remove plant-related classes
+        plotEl.classList.remove('ready', 'planted', 'mutated', 'entangled');
+        plotEl.classList.add('empty');
+        
+        // Add harvest flash effect
+        plotEl.style.transition = 'box-shadow 0.15s ease-out';
+        plotEl.style.boxShadow = '0 0 20px var(--quantum-green), inset 0 0 15px rgba(68, 255, 170, 0.3)';
+        
+        // Clear the flash after a moment
+        setTimeout(() => {
+            plotEl.style.boxShadow = '';
+            plotEl.style.transition = '';
+        }, 200);
     }
     
     function autoPlantAll() {
@@ -3848,21 +4716,67 @@ const QuantumMechanics = (() => {
     
     // Mysterious narrative messages that appear in the log
     const narrativeMessages = [
+        // Very early - gentle introduction
+        { threshold: 50, message: "A strange calm settles over you.", shown: false },
         { threshold: 100, message: "The garden remembers...", shown: false },
+        { threshold: 200, message: "Each seed carries infinite potential.", shown: false },
+        { threshold: 350, message: "The quantum state awaits your observation.", shown: false },
         { threshold: 500, message: "You feel something watching back.", shown: false },
+        { threshold: 750, message: "The flowers seem to lean toward you.", shown: false },
         { threshold: 1000, message: "The flowers whisper in frequencies you almost understand.", shown: false },
+        { threshold: 1500, message: "Is the garden growing, or are you shrinking?", shown: false },
+        { threshold: 2000, message: "The probability clouds thicken.", shown: false },
         { threshold: 2500, message: "Reality feels... thin here.", shown: false },
-        { threshold: 5000, message: "W̷h̷o̷ ̷p̷l̷a̷n̷t̷e̷d̷ ̷t̷h̷e̷ ̷f̷i̷r̷s̷t̷ ̷s̷e̷e̷d̷?̷", shown: false },
+        { threshold: 3500, message: "The observer effect works both ways.", shown: false },
+        { threshold: 5000, message: "Who planted the first seed?", shown: false },
+        { threshold: 7500, message: "The vacuum fluctuates with purpose.", shown: false },
         { threshold: 10000, message: "The quantum state is YOU.", shown: false },
+        { threshold: 15000, message: "Measurement creates reality. You create measurement.", shown: false },
+        { threshold: 20000, message: "The garden exists in superposition until observed.", shown: false },
         { threshold: 25000, message: "Every click echoes across infinite gardens.", shown: false },
+        { threshold: 35000, message: "The wave function never truly collapses. It just... branches.", shown: false },
         { threshold: 50000, message: "They're beautiful when they bloom in other dimensions too.", shown: false },
+        { threshold: 75000, message: "Heisenberg's ghost tends a garden much like this one.", shown: false },
         { threshold: 100000, message: "You've been here before. You'll be here again.", shown: false },
+        // Mid-game - deeper mysteries
+        { threshold: 150000, message: "The Planck length is the pixel size of reality.", shown: false },
+        { threshold: 200000, message: "Virtual particles bloom and die in the spaces between.", shown: false },
         { threshold: 250000, message: "The fragments are trying to tell you something.", shown: false },
+        { threshold: 300000, message: "In Hilbert space, every garden is adjacent.", shown: false },
+        { threshold: 400000, message: "The Dirac equation describes the dance of your flowers.", shown: false },
         { threshold: 500000, message: "Reality groans under the weight of observation.", shown: false },
-        { threshold: 1000000, message: "C̴̢̛̛̙̱̻̺͕̤̪͉̙̲͎̰̼͎̱̈́̊͋̍͂͂̉̎̐͊͑̉̉̃͊̀̀̈́̒̔̊̋̚͘̕͘ͅo̴̧̨̢̡͎̞̗̹̼͓̝̞̱̮̠̹̣̺͍̙̹̯̬̭̟͖̪͍̣̖̿̓͆̃̇̑̇͛̄̅̄̌̚̚͜͜͝ͅl̸̡̧̨̹̣̫̤̻̥͍̲̼̝̯̯̥̖̪̦̗͓̺̫̮͇̝̪̦̝͋̀̿̊̀̓̋̍̄̈́͋͘͜͝l̴̨̛̛̲̲̤̙̱͍̪̖̈̔̈̈́̓̓̄͌̈͘ą̵̛̭̖͓̹͔̭̰̼͗̀͆̑̓̓̄̅̍̄̈́̕p̵̧̢̡̛̝̪͚̪̩̼̘͕͇̰̟̘͓̜̮̰̟̜̪̗̠̤̙̌̋̇̈́̀̄̓͘͜͝s̷̨̢̖̜̼͔̤̼̗͇̲̼̞̪̼̯͉̪̙̜͉̲̟̻͎̠̯̮̜̲̈́̿̾̇͜e̷̛̯̖̝̲̺̳̪̻͇͍̥̞̠̯̾̂̍̅̾̄̇͋̓̆̑̆̉̕ ̶̨̧̲̤͙̦̪̩̻̭̭͕̼̱̮̻̮͇̲̫̜̫͂̇͗̈̈́͂̀̽͛͑̀̓̅͒͗͑̈́͘͜͝͝i̶̧̢̢͔̘͕̩̰̗̰̺̤̹̣̭͕̝̺̪͓͈̘̩̘͓̻̠͗̄̓̓̈́͊͊̊͂̈́́̈́̿̓̂̋̾̈̀͆̊́̓̎̂͊̃̕̕̚͝͝͠ͅş̶̡̧̞̤̬̜͖̮̮̟̭̯̩̥̲̭̝̗͕̰͍͔̗̂̂͂͛́͊̅̍͊͌͘͝ ̸̧̡̡͓̱̱̣̻̯̠̟̠̦͓̳̫̬̝̹͇̈́̄͌̒̇̍̀̉̉̊̀̋̉̾͛̈́̀̋̉̚̕͝͠͠c̷̡̨̳̺͈͙̥̙͍̦͎̜̰̲͋̽̊̆̏̃̎̃̔̋͒͜o̶̠͇̱͐͊̑̾̅̋̌̎͋̈́͑͗̓̊́̾̽̃̓̏̒̋̿̈́͘̕̕͘͠m̴̧̧͕͓̙̳̗̺͙̮̣̝̃̏̄̽̉̏̓̎̂̌̒̋̐̒̄͒̽̾̒͑̎͊̾̋̚̕̕̚͜͝͝͝͝i̷̛̘͗̒́̍̅̆́̅̇̂̏̇͌̀͂̇̅̑͒̂̍͗͠͝n̸̨̨͕̺̹̱̥̬͎͔͖͓̰̫̥̘̝̘̼̲͇̹͋͂̇̎̏͐̇̑̿̆̋̏͂̏̓̕͘͜g̸̢̛̳̼͖͈̳̮͉͚͉͉͖̥̰͙̭̻̞̯͙̗̎̍́̅̎̇̈́̓͗̅̆́̚͜͝͝.̶̧̧̢̺̳̗͖̞̬̮̺̰̺̖̥̘̺̗̙̝͚̳̯̄͌̆̐̋̀̾̊̄̅͑͗̌̂̇͋̒͗̋͛̅͘.̴̡̖͙̖̗͎̥̳̹̙͈̪̬̥̬̪͖͙͓̮̼̠̟͖̱̩̽͛̂̑͐̑͜͜͝.", shown: false },
+        { threshold: 600000, message: "Spin up or spin down? The garden chooses.", shown: false },
+        { threshold: 750000, message: "QED: The flowers exchange virtual photons.", shown: false },
+        { threshold: 900000, message: "The path integral sums over all possible gardens.", shown: false },
+        { threshold: 1000000, message: "Collapse is coming...", shown: false },
+        // Late game - cosmic scale
+        { threshold: 1500000, message: "The renormalization group flows toward your garden.", shown: false },
+        { threshold: 2000000, message: "Gauge symmetry: the universe's deepest secret, hidden in petals.", shown: false },
         { threshold: 2500000, message: "When reality breaks, will you remember this garden?", shown: false },
+        { threshold: 3000000, message: "The Standard Model is incomplete. Your garden fills the gaps.", shown: false },
+        { threshold: 4000000, message: "Gluons bind quarks. What binds the garden to you?", shown: false },
         { threshold: 5000000, message: "The fragments whisper: 'Begin again. Begin stronger.'", shown: false },
-        { threshold: 10000000, message: "🌌 REALITY COLLAPSE is approaching... (Coming soon)", shown: false },
+        { threshold: 6000000, message: "In the quantum foam, gardens bubble into existence.", shown: false },
+        { threshold: 7500000, message: "The cosmological constant... it's changing.", shown: false },
+        { threshold: 10000000, message: "The fabric of reality strains... you are ready to COLLAPSE.", shown: false },
+        // Post-prestige - transcendence
+        { threshold: 15000000, message: "You have become a fixed point in the renormalization flow.", shown: false },
+        { threshold: 25000000, message: "The other timelines remember you differently.", shown: false },
+        { threshold: 50000000, message: "Each reality leaves an imprint. You are becoming... something new.", shown: false },
+        { threshold: 75000000, message: "The anthropic principle selected for your garden.", shown: false },
+        { threshold: 100000000, message: "The void between realities is not empty. Something lives there.", shown: false },
+        { threshold: 150000000, message: "Dark energy accelerates the expansion between your thoughts.", shown: false },
+        { threshold: 200000000, message: "The holographic principle: all information on the boundary.", shown: false },
+        { threshold: 300000000, message: "String theory requires 11 dimensions. Your garden spans them all.", shown: false },
+        { threshold: 500000000, message: "You can see them now. The other gardeners.", shown: false },
+        { threshold: 750000000, message: "The Wheeler-DeWitt equation has no time parameter. Neither do you.", shown: false },
+        { threshold: 1000000000, message: "You are no longer just an observer. You are the garden.", shown: false },
+        // Extreme late game
+        { threshold: 2000000000, message: "The Bekenstein bound approaches. Information density critical.", shown: false },
+        { threshold: 5000000000, message: "More collapses than atoms in a human body.", shown: false },
+        { threshold: 10000000000, message: "The garden remembers the Big Bang. It was there.", shown: false },
+        { threshold: 50000000000, message: "Heat death is just another harvest.", shown: false },
+        { threshold: 100000000000, message: "You tend the garden at the end of time.", shown: false },
     ];
     
     // Quantum events that can occur randomly
@@ -4107,6 +5021,261 @@ const QuantumMechanics = (() => {
                     return changed > 0 ? `Storm turbulence affected ${changed} plants!` : 'The storm passes without effect.';
                 }
             }
+        },
+        {
+            id: 'voidWhisper',
+            name: 'Whisper from the Void',
+            description: 'S̷o̶m̵e̶t̴h̷i̵n̴g̸ ̷w̵a̸t̶c̶h̷e̵s̴ ̶f̸r̸o̷m̵ ̴b̸e̷t̷w̴e̵e̸n̵ ̷t̶h̸e̷ ̸s̵t̸a̶r̶s̴.̵.̵.',
+            weight: 3,
+            minEnergy: 50000,
+            effect: () => {
+                // The void notices you more as you progress
+                const realityLevel = StateManager.get('stats.realityLevel') || 0;
+                const knowledge = Math.floor(25 + realityLevel * 10);
+                ResourceManager.add('knowledge', knowledge);
+                
+                // Glitch text notification
+                const messages = [
+                    'T̷H̶E̵ ̷G̷A̸R̵D̵E̴N̶ ̵G̸R̸O̶W̷S̶.̶ ̴W̸E̵ ̵W̶A̷T̴C̷H̷.',
+                    'Y̸O̵U̶ ̸A̴R̸E̸ ̷B̶E̶C̷O̷M̶I̴N̵G̸ ̶A̸W̷A̸R̵E̸.̵',
+                    'R̴E̸A̸L̵I̵T̷Y̷ ̶I̵S̸ ̸T̸H̷I̷N̸N̷E̵R̵ ̴T̴H̷A̷N̷ ̴Y̷O̴U̶ ̶K̵N̷O̵W̵.',
+                    'T̴H̶E̶ ̶O̶B̴S̷E̴R̵V̴E̷R̵ ̷I̷S̶ ̵A̷L̷S̸O̵ ̵O̶B̸S̷E̵R̵V̶E̷D̷.̷'
+                ];
+                UI.addLogEntry(messages[Math.floor(Math.random() * messages.length)], 'highlight');
+                
+                return `+${knowledge} 📚 from beyond...`;
+            }
+        },
+        {
+            id: 'multiverseEcho',
+            name: 'Multiverse Echo',
+            description: 'Another version of your garden resonates with this one.',
+            weight: 6,
+            minEnergy: 30000,
+            requires: { resource: 'fragments', unlocked: true },
+            effect: () => {
+                const realityLevel = StateManager.get('stats.realityLevel') || 0;
+                if (realityLevel === 0) {
+                    return 'You sense something... but your reality is too stable.';
+                }
+                
+                // Bonus based on how many collapses you've done
+                const bonus = 50 * realityLevel;
+                ResourceManager.add('energy', bonus);
+                ResourceManager.add('time', realityLevel * 5);
+                
+                return `Echo from Reality-${realityLevel - 1}: +${bonus} ⚡, +${realityLevel * 5} ⏳`;
+            }
+        },
+        {
+            id: 'seedRain',
+            name: 'Seed Rain',
+            description: 'Seeds fall from a tear in spacetime!',
+            weight: 15,
+            minEnergy: 5000,
+            effect: () => {
+                const seeds = Math.floor(Math.random() * 10) + 5;
+                ResourceManager.add('seeds', seeds);
+                return `+${seeds} 🌱 rained down from above!`;
+            }
+        },
+        {
+            id: 'mutationWave',
+            name: 'Mutation Wave',
+            description: 'Quantum radiation bathes your garden!',
+            weight: 5,
+            minEnergy: 40000,
+            effect: () => {
+                // Chance to add mutation to each non-mutated plant
+                const plots = StateManager.get('garden.plots') || [];
+                let mutated = 0;
+                const mutationTypes = ['golden', 'prismatic', 'temporal', 'void', 'crystalline', 'echoing'];
+                
+                plots.forEach((plot, index) => {
+                    if (plot.plant && !plot.mutation && Math.random() < 0.25) {
+                        const mutation = mutationTypes[Math.floor(Math.random() * mutationTypes.length)];
+                        StateManager.set(`garden.plots.${index}.mutation`, mutation);
+                        mutated++;
+                    }
+                });
+                
+                if (mutated > 0) {
+                    UI.renderGarden();
+                    const mutationsWitnessed = StateManager.get('stats.mutationsWitnessed') || 0;
+                    StateManager.set('stats.mutationsWitnessed', mutationsWitnessed + mutated);
+                    return `${mutated} plant${mutated > 1 ? 's' : ''} mutated!`;
+                }
+                return 'No plants affected by the wave.';
+            }
+        },
+        {
+            id: 'déjàVu',
+            name: 'Déjà Vu',
+            description: 'Haven\'t we done this before...?',
+            weight: 8,
+            minEnergy: 20000,
+            effect: () => {
+                // Repeat the last resource you gained
+                const lastGain = StateManager.get('lastResourceGain');
+                if (lastGain && lastGain.resource && lastGain.amount) {
+                    ResourceManager.add(lastGain.resource, lastGain.amount);
+                    return `The universe repeats: +${lastGain.amount} ${GameData.resources[lastGain.resource]?.icon || ''}`;
+                }
+                // Fallback
+                ResourceManager.add('energy', 100);
+                return 'The feeling passes... +100 ⚡';
+            }
+        },
+        {
+            id: 'quantumLottery',
+            name: 'Quantum Lottery',
+            description: 'Probability collapses in your favor... or does it?',
+            weight: 10,
+            minEnergy: 10000,
+            effect: () => {
+                const roll = Math.random();
+                if (roll < 0.01) {
+                    // Jackpot! 1% chance
+                    ResourceManager.add('energy', 5000);
+                    ResourceManager.add('time', 100);
+                    ResourceManager.add('knowledge', 50);
+                    StateManager.set('stats.lotteryJackpot', true);
+                    return '🎰 JACKPOT! +5000 ⚡, +100 ⏳, +50 📚!';
+                } else if (roll < 0.2) {
+                    // Good win
+                    ResourceManager.add('energy', 500);
+                    return '🎰 Winner! +500 ⚡';
+                } else if (roll < 0.6) {
+                    // Small win
+                    ResourceManager.add('energy', 50);
+                    return '🎰 Small prize: +50 ⚡';
+                } else {
+                    // No prize
+                    return '🎰 Better luck next time...';
+                }
+            }
+        },
+        {
+            id: 'gardenSpirit',
+            name: 'Garden Spirit',
+            description: 'A benevolent presence tends your garden.',
+            weight: 7,
+            minEnergy: 75000,
+            effect: () => {
+                const plots = StateManager.get('garden.plots') || [];
+                let planted = 0;
+                const seeds = ResourceManager.get('seeds');
+                
+                // Plant in all empty plots (up to 5)
+                const plantTypes = ['quantumLily', 'timeTulip', 'energyRose'];
+                for (let i = 0; i < plots.length && planted < 5 && seeds > planted; i++) {
+                    if (!plots[i].plant) {
+                        const plantType = plantTypes[Math.floor(Math.random() * plantTypes.length)];
+                        if (GeneratorManager.isUnlocked(plantType)) {
+                            GardenManager.plant(i, plantType);
+                            planted++;
+                        }
+                    }
+                }
+                
+                if (planted > 0) {
+                    UI.renderGarden();
+                    return `The spirit planted ${planted} seeds for you! 🌱`;
+                }
+                // Gift seeds instead
+                ResourceManager.add('seeds', 10);
+                return 'The spirit gifts you seeds: +10 🌱';
+            }
+        },
+        {
+            id: 'echoFromFuture',
+            name: 'Echo From the Future',
+            description: 'A message arrives from a timeline yet to occur.',
+            weight: 4,
+            minEnergy: 150000,
+            effect: () => {
+                const messages = [
+                    "You will remember this moment.",
+                    "The choice you make next matters.",
+                    "In 47 collapses, everything changes.",
+                    "They are proud of what you become.",
+                    "The garden survives. That's what matters.",
+                ];
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                setTimeout(() => UI.addLogEntry(`📨 ${msg}`, 'mysterious'), 1000);
+                
+                const bonus = Math.floor(Math.random() * 500) + 100;
+                ResourceManager.add('energy', bonus);
+                return `Future echo received: +${bonus} ⚡ and a cryptic message...`;
+            }
+        },
+        {
+            id: 'quantumArchaeology',
+            name: 'Quantum Archaeology',
+            description: 'Fragments of a previous timeline surface.',
+            weight: 5,
+            minEnergy: 200000,
+            requires: { resource: 'knowledge', amount: 100 },
+            effect: () => {
+                const realityLevel = PrestigeManager.getRealityLevel();
+                const bonus = (realityLevel + 1) * 50;
+                ResourceManager.add('knowledge', bonus);
+                ResourceManager.add('timeCrystals', Math.floor(bonus / 5));
+                
+                const artifacts = [
+                    "a fossilized probability wave",
+                    "crystallized observation particles",
+                    "a map of gardens that never were",
+                    "memories belonging to someone else",
+                    "equations written in colors that don't exist",
+                ];
+                const artifact = artifacts[Math.floor(Math.random() * artifacts.length)];
+                return `Discovered ${artifact}: +${bonus} 📚, +${Math.floor(bonus/5)} ⏳`;
+            }
+        },
+        {
+            id: 'vacuumDecay',
+            name: 'False Vacuum Fluctuation',
+            description: 'The universe hiccups. Everything wavers.',
+            weight: 3,
+            minEnergy: 500000,
+            effect: () => {
+                // Apply glitch effect
+                if (typeof NarrativeSystem !== 'undefined') {
+                    NarrativeSystem.triggerGlitch(2000);
+                }
+                
+                // Random gain or loss
+                if (Math.random() < 0.7) {
+                    const bonus = Math.floor(ResourceManager.get('energy') * 0.15);
+                    ResourceManager.add('energy', bonus);
+                    return `Reality stabilizes favorably: +${Utils.formatNumber(bonus)} ⚡`;
+                } else {
+                    const coherence = ResourceManager.get('coherence');
+                    ResourceManager.set('coherence', Math.max(50, coherence));
+                    return `Reality stabilizes. Coherence restored to safe levels.`;
+                }
+            }
+        },
+        {
+            id: 'feynmanVisit',
+            name: "Feynman's Ghost",
+            description: 'The spirit of curiosity visits your garden.',
+            weight: 2,
+            minEnergy: 1000000,
+            effect: () => {
+                const quotes = [
+                    "Nature uses only the longest threads to weave her patterns.",
+                    "What I cannot create, I do not understand.",
+                    "The first principle is that you must not fool yourself.",
+                    "I learned very early the difference between knowing the name of something and knowing something.",
+                ];
+                const quote = quotes[Math.floor(Math.random() * quotes.length)];
+                setTimeout(() => UI.addLogEntry(`💭 "${quote}" - R.P. Feynman`, 'mysterious'), 1500);
+                
+                ResourceManager.add('knowledge', 200);
+                return `A legendary physicist approves: +200 📚`;
+            }
         }
     ];
     
@@ -4262,40 +5431,60 @@ const QuantumMechanics = (() => {
         const witnessed = StateManager.get('stats.quantumEventsWitnessed') || 0;
         StateManager.set('stats.quantumEventsWitnessed', witnessed + 1);
         
-        // Create event popup
+        // Create event popup - append to resources section instead of center screen
         const popup = document.createElement('div');
         popup.className = 'quantum-event';
         popup.innerHTML = `
             <h3>⚛️ ${event.name}</h3>
             <p>${event.description}</p>
-            <p style="color: var(--quantum-green); font-weight: bold;">${resultMessage}</p>
-            <button onclick="this.parentElement.remove()">Acknowledge</button>
+            <p style="color: var(--quantum-green); font-weight: bold; font-size: 0.8rem;">${resultMessage}</p>
+            <button onclick="this.parentElement.remove()">OK</button>
         `;
-        document.body.appendChild(popup);
         
-        // Auto-remove after 5 seconds
+        // Append to resources section
+        const resourcesSection = document.getElementById('resources-section');
+        if (resourcesSection) {
+            resourcesSection.style.position = 'relative';
+            resourcesSection.appendChild(popup);
+        } else {
+            document.body.appendChild(popup);
+        }
+        
+        // Auto-remove after 4 seconds
         setTimeout(() => {
             if (popup.parentElement) {
                 popup.style.opacity = '0';
-                popup.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                popup.style.transform = 'scale(0.9)';
+                popup.style.transition = 'opacity 0.3s, transform 0.3s';
                 setTimeout(() => popup.remove(), 300);
             }
-        }, 5000);
+        }, 4000);
         
         events.emit('quantumEvent', event);
     }
     
     function checkNarrativeMessages() {
         const totalEnergy = StateManager.get('resources.energy.total') || 0;
+        const shownMessages = StateManager.get('shownNarrativeMessages') || [];
         
         for (const msg of narrativeMessages) {
-            if (!msg.shown && totalEnergy >= msg.threshold) {
+            // Check if already shown (either in memory or in saved state)
+            const alreadyShown = msg.shown || shownMessages.includes(msg.threshold);
+            
+            if (!alreadyShown && totalEnergy >= msg.threshold) {
                 msg.shown = true;
+                
+                // Save to persistent state
+                shownMessages.push(msg.threshold);
+                StateManager.set('shownNarrativeMessages', shownMessages);
                 
                 // Delay slightly for dramatic effect
                 setTimeout(() => {
                     UI.addLogEntry(msg.message, 'mysterious');
                 }, Math.random() * 3000 + 1000);
+            } else if (alreadyShown) {
+                // Mark as shown in memory too
+                msg.shown = true;
             }
         }
     }
@@ -4315,9 +5504,45 @@ const QuantumMechanics = (() => {
         }
         
         const current = ResourceManager.get('coherence');
+        let graceTimer = StateManager.get('coherenceGraceTimer') || 0;
+        const wasAtMax = StateManager.get('coherenceWasAtMax') || false;
+        
+        // Track if we just hit 100% (transition detection)
+        if (current >= 100 && !wasAtMax) {
+            // Just transitioned to 100% - start grace period
+            StateManager.set('coherenceGraceTimer', 0.35); // 350ms grace
+            StateManager.set('coherenceWasAtMax', true);
+            return;
+        }
+        
+        if (current >= 100) {
+            // Still at 100% during grace period
+            if (graceTimer > 0) {
+                graceTimer -= deltaTime;
+                StateManager.set('coherenceGraceTimer', graceTimer);
+                return; // Still in grace, no decay
+            }
+            // Grace expired, allow decay to start
+        }
+        
+        // No longer at max
+        if (current < 100) {
+            StateManager.set('coherenceWasAtMax', false);
+        }
         
         if (current > 0) {
-            const newCoherence = Math.max(0, current - decayRate * deltaTime);
+            // Gentle easing near 100% for smoother visual transition
+            let easedDecay = decayRate;
+            if (current > 99) {
+                // 99-100: 30% decay speed
+                easedDecay = decayRate * 0.3;
+            } else if (current > 98) {
+                // 98-99: ramp from 30% to 100%
+                const t = (99 - current); // 0 at 99, 1 at 98
+                easedDecay = decayRate * (0.3 + t * 0.7);
+            }
+            
+            const newCoherence = Math.max(0, current - easedDecay * deltaTime);
             StateManager.set('resources.coherence.amount', newCoherence);
             
             // Warn at 50% - production starting to drop
@@ -4456,6 +5681,9 @@ const AchievementManager = (() => {
             );
             
             UI.addLogEntry(`🏆 Achievement: ${data.name}`, 'highlight');
+            
+            // Re-render stats tab if it's visible
+            UI.renderStats();
         }
         
         return true;
@@ -4503,6 +5731,723 @@ const AchievementManager = (() => {
         getAll,
         on: events.on
     };
+})();
+
+// ============================================
+// MODULE: Prestige System - Reality Collapse
+// ============================================
+const PrestigeManager = (() => {
+    const FRAGMENT_BASE = 1000000; // 1M energy = 1 fragment base
+    
+    function isUnlocked() {
+        // Prestige UI is unlocked if:
+        // 1. Player has bought realityAwareness upgrade
+        // 2. OR player has fragments (has collapsed before)
+        // 3. OR player has reality level > 0 (has collapsed before)
+        return UpgradeManager.isPurchased('realityAwareness') ||
+               (ResourceManager.get('fragments') || 0) > 0 ||
+               (StateManager.get('stats.realityLevel') || 0) > 0;
+    }
+    
+    function getFragmentsOnCollapse() {
+        // Need realityAwareness purchased to actually collapse
+        if (!UpgradeManager.isPurchased('realityAwareness')) return 0;
+        
+        const totalEnergy = StateManager.get('resources.energy.total') || 0;
+        // Logarithmic scaling: more energy = more fragments, but diminishing
+        // 1M = 1, 10M = ~3, 100M = ~7, 1B = ~10
+        if (totalEnergy < FRAGMENT_BASE) return 0;
+        
+        const baseFragments = Math.floor(Math.log10(totalEnergy / FRAGMENT_BASE) * 3) + 1;
+        
+        // Bonus for first collapse per reality level
+        const realityLevel = StateManager.get('stats.realityLevel') || 0;
+        const newPlayerBonus = realityLevel === 0 ? 2 : 0;
+        
+        return baseFragments + newPlayerBonus;
+    }
+    
+    function canCollapse() {
+        return isUnlocked() && getFragmentsOnCollapse() > 0;
+    }
+    
+    function collapse() {
+        if (!canCollapse()) return false;
+        
+        const fragmentsGained = getFragmentsOnCollapse();
+        const currentFragments = ResourceManager.get('fragments') || 0;
+        
+        // Save persistent upgrades
+        const persistentUpgrades = [];
+        Object.entries(GameData.upgrades).forEach(([id, data]) => {
+            if (data.persistent && UpgradeManager.isPurchased(id)) {
+                persistentUpgrades.push(id);
+            }
+        });
+        
+        // Calculate retained resources from persistent upgrades
+        let retainedTime = 0;
+        if (UpgradeManager.isPurchased('fragmentBoost3')) {
+            retainedTime = Math.floor(ResourceManager.get('time') * 0.1);
+        }
+        
+        // Save stats that persist
+        const currentLevel = StateManager.get('stats.realityLevel') || 0;
+        const totalCollapses = StateManager.get('stats.totalCollapses') || 0;
+        const achievements = StateManager.get('achievements');
+        const playTime = StateManager.get('stats.playTime');
+        const lastCollapsePlayTime = StateManager.get('stats.lastCollapsePlayTime') || 0;
+        
+        // Check if this is a fast collapse (within 30 minutes of the last collapse)
+        const timeSinceLastCollapse = playTime - lastCollapsePlayTime;
+        const isFastCollapse = totalCollapses > 0 && timeSinceLastCollapse < 1800; // 30 minutes
+        
+        // Grant fragments BEFORE reset
+        const newFragmentTotal = currentFragments + fragmentsGained;
+        
+        // Perform the collapse!
+        window.quantumGardenResetting = true;
+        
+        // Reset state but keep certain things
+        const newState = Utils.deepClone(GameData.initialState);
+        
+        // Restore persistent data
+        newState.resources.fragments = { amount: newFragmentTotal, total: newFragmentTotal, rate: 0 };
+        newState.stats.realityLevel = currentLevel + 1;
+        newState.stats.totalCollapses = totalCollapses + 1;
+        newState.stats.playTime = playTime;
+        newState.stats.lastCollapsePlayTime = playTime; // Track when this collapse happened
+        newState.stats.fastCollapse = isFastCollapse || StateManager.get('stats.fastCollapse'); // Keep if achieved
+        newState.achievements = achievements;
+        
+        // Restore persistent upgrades
+        persistentUpgrades.forEach(id => {
+            newState.upgrades[id] = { purchased: true };
+        });
+        
+        // Apply starting bonuses from persistent upgrades
+        if (persistentUpgrades.includes('fragmentBoost2')) {
+            newState.resources.energy.amount = 100;
+            newState.resources.seeds.amount = 10;
+            newState.resources.seeds.unlocked = true;
+        }
+        
+        if (retainedTime > 0) {
+            newState.resources.time.amount = retainedTime;
+            newState.resources.time.unlocked = retainedTime > 0;
+        }
+        
+        // Initialize generators and other upgrades
+        Object.keys(GameData.generators).forEach(id => {
+            newState.generators[id] = { owned: 0 };
+        });
+        Object.keys(GameData.upgrades).forEach(id => {
+            if (!newState.upgrades[id]) {
+                newState.upgrades[id] = { purchased: false };
+            }
+        });
+        Object.keys(GameData.achievements).forEach(id => {
+            if (!newState.achievements[id]) {
+                newState.achievements[id] = false;
+            }
+        });
+        
+        // Initialize garden
+        for (let i = 0; i < newState.garden.size; i++) {
+            newState.garden.plots.push({ plant: null, progress: 0, plantedAt: null });
+        }
+        
+        // Apply the new state
+        StateManager.setState(newState);
+        StateManager.save();
+        
+        window.quantumGardenResetting = false;
+        
+        // Refresh UI
+        UI.renderAll();
+        
+        // Log the collapse
+        UI.addLogEntry(`💠 Reality Collapsed! Gained ${fragmentsGained} Reality Fragments.`, 'highlight');
+        UI.addLogEntry(`🔮 Welcome to Reality Level ${currentLevel + 1}`, 'highlight');
+        
+        return true;
+    }
+    
+    function getProductionMultiplier() {
+        // Each fragment gives bonus production if fragmentBoost1 is purchased
+        if (!UpgradeManager.isPurchased('fragmentBoost1')) return 1;
+        
+        const fragments = ResourceManager.get('fragments') || 0;
+        return 1 + (fragments * 0.05); // 5% per fragment
+    }
+    
+    function getRealityLevel() {
+        return StateManager.get('stats.realityLevel') || 0;
+    }
+    
+    return {
+        isUnlocked,
+        getFragmentsOnCollapse,
+        canCollapse,
+        collapse,
+        getProductionMultiplier,
+        getRealityLevel
+    };
+})();
+
+// ============================================
+// MODULE: Narrative System - Story & Atmosphere
+// ============================================
+const NarrativeSystem = (() => {
+    let tickerInitialized = false;
+    let glitchInterval = null;
+    let lastGlitchCheck = 0;
+    
+    // Ticker messages that scroll across the top
+    const tickerMessages = [
+        // Early game - mysterious hints
+        "...quantum fluctuations detected in local spacetime...",
+        "The probability wave function collapses with each observation.",
+        "Somewhere, a garden grows in superposition.",
+        "Feynman once said: 'If you think you understand quantum mechanics, you don't understand quantum mechanics.'",
+        "All possible paths are taken. All possible gardens bloom.",
+        "The observer effect: your attention shapes reality.",
+        "In the quantum realm, nothing is certain until measured.",
+        "Schrödinger's flowers: alive and dead until you look.",
+        "Every measurement is an act of creation.",
+        "The universe is under no obligation to make sense to you. - Neil deGrasse Tyson",
+        
+        // Mid game - deeper mysteries
+        "Between observations, the garden exists in all states simultaneously.",
+        "Warning: Coherence decay approaching critical threshold.",
+        "QED: Quantum Electrodynamic fluctuations are nominal.",
+        "The vacuum is not empty. It seethes with virtual particles.",
+        "Heisenberg's uncertainty: position or momentum, never both.",
+        "Entanglement persists regardless of distance. Spooky action at a distance.",
+        "The many-worlds interpretation suggests this garden exists infinitely.",
+        "Planck length: 1.616 × 10⁻³⁵ meters. Below this, space itself becomes uncertain.",
+        "Quantum tunneling allows particles to pass through impossible barriers.",
+        "The double-slit experiment forever changed our understanding of reality.",
+        
+        // Late game - ominous
+        "R̶e̶a̶l̶i̶t̶y̶ ̶i̶n̶t̶e̶g̶r̶i̶t̶y̶:̶ ̶D̶E̶G̶R̶A̶D̶I̶N̶G̶",
+        "Other observers have been detected in adjacent probability spaces.",
+        "The boundary between observer and observed is dissolving.",
+        "Your wave function is entangling with the garden's.",
+        "Quantum chromodynamics: colors you cannot see bind reality together.",
+        "The Dirac sea churns beneath observable reality.",
+        "Vacuum energy density: unstable.",
+        "Virtual photon exchange increasing. Cause: unknown.",
+        "Bell's inequality violation confirmed. Local realism: ABANDONED.",
+        
+        // Post-prestige - cosmic horror
+        "REALITY LEVEL INCREASED - Previous timeline archived.",
+        "The other gardeners are watching. They always have been.",
+        "Each collapse creates echoes in the quantum foam.",
+        "You have become entangled with something vast.",
+        "The fragments remember every garden you've grown.",
+        "Somewhere, another you chose differently.",
+        "The universe observes those who observe it.",
+        "Causality is a suggestion, not a law.",
+        "Time is a flat circle in Hilbert space.",
+        "The garden grows in dimensions you cannot perceive."
+    ];
+    
+    // Major story beats triggered at milestones
+    const storyMoments = [
+        {
+            threshold: 1000,
+            triggered: false,
+            title: "The First Bloom",
+            content: [
+                "The first quantum lily opens its petals.",
+                "For a moment, you feel... watched.",
+                "Not by eyes, but by probability itself.",
+                "The garden knows it is being observed."
+            ]
+        },
+        {
+            threshold: 10000,
+            triggered: false,
+            title: "Whispers in the Field",
+            content: [
+                "The flowers have begun to whisper.",
+                "Not in words—in wave functions.",
+                "Each bloom carries information from adjacent timelines.",
+                "You are learning to listen."
+            ]
+        },
+        {
+            threshold: 100000,
+            triggered: false,
+            title: "The Observer's Paradox",
+            content: [
+                "A troubling thought occurs to you:",
+                "When you observe the garden, you collapse its possibilities.",
+                "But what happens when the garden... observes you?",
+                "You feel your own probability wave quiver."
+            ]
+        },
+        {
+            threshold: 1000000,
+            triggered: false,
+            title: "Echoes",
+            content: [
+                "You see them now. Faintly.",
+                "Other gardens. Other gardeners.",
+                "Infinite variations, all tending quantum flowers.",
+                "They see you too.",
+                "They have always seen you."
+            ]
+        },
+        {
+            threshold: 10000000,
+            triggered: false,
+            title: "The Membrane",
+            content: [
+                "Reality has become... thin.",
+                "You can feel the membrane between worlds.",
+                "It pulses with each click, each harvest.",
+                "Something presses against it from the other side.",
+                "Perhaps it is time to let go."
+            ]
+        },
+        {
+            threshold: 100000000,
+            triggered: false,
+            title: "Beyond the Collapse",
+            content: [
+                "You have collapsed reality before.",
+                "Each time, you return. Changed.",
+                "The fragments you carry are pieces of broken timelines.",
+                "Or are they pieces of something that was never whole?",
+                "The garden knows. The garden remembers.",
+                "Do you?"
+            ]
+        }
+    ];
+    
+    // Additional log messages triggered by various conditions
+    const conditionalMessages = [
+        { condition: () => GardenManager.getPlantsGrowing() >= 9, once: 'fullGarden', message: "The garden hums with potential energy.", type: 'mysterious' },
+        { condition: () => StateManager.get('stats.plantsEntangled') >= 10, once: 'manyEntangled', message: "The entangled plants pulse in unison, sharing secrets across space.", type: 'mysterious' },
+        { condition: () => StateManager.get('stats.quantumEventsWitnessed') >= 20, once: 'manyEvents', message: "The quantum realm has noticed your attention.", type: 'mysterious' },
+        { condition: () => ResourceManager.get('knowledge') >= 100, once: 'muchKnowledge', message: "Knowledge accumulates. Patterns emerge. The universe reveals itself.", type: 'mysterious' },
+        { condition: () => ResourceManager.get('timeCrystals') >= 50, once: 'muchTime', message: "Time crystals resonate at frequencies that shouldn't exist.", type: 'mysterious' },
+        { condition: () => ResourceManager.get('coherence') <= 10, once: 'veryLowCoherence', message: "R̵e̷a̸l̵i̷t̴y̸ ̵f̷r̴a̵y̴s̵ ̷a̷t̵ ̵t̴h̸e̶ ̵e̷d̵g̸e̷s̷.̴.̵.", type: 'warning' },
+        { condition: () => StateManager.get('stats.totalClicks') >= 1000, once: 'manyClicks', message: "A thousand collapses. A thousand creations.", type: 'mysterious' },
+        { condition: () => StateManager.get('stats.totalClicks') >= 10000, once: 'tenKClicks', message: "Ten thousand observations. The garden has become part of you.", type: 'mysterious' },
+        { condition: () => PrestigeManager.getRealityLevel() >= 1, once: 'firstCollapse', message: "You remember the garden from before. Or do you remember it from after?", type: 'mysterious' },
+        { condition: () => PrestigeManager.getRealityLevel() >= 3, once: 'thirdCollapse', message: "Reality buckles easier now. It knows your touch.", type: 'mysterious' },
+        { condition: () => PrestigeManager.getRealityLevel() >= 5, once: 'fifthCollapse', message: "The other gardeners speak of you. The one who collapses and returns.", type: 'mysterious' },
+    ];
+    
+    // Feynman diagrams as ASCII art (shown rarely in log)
+    const feynmanDiagrams = [
+        "e⁻ ~~~γ~~> e⁻  [photon exchange]",
+        "q --g--> q  [gluon emission]",
+        "e⁺ + e⁻ → γ → q + q̄  [pair production]",
+        "W± → l± + ν  [weak decay]",
+        "H → γγ  [Higgs to diphoton]",
+    ];
+    
+    function initialize() {
+        if (tickerInitialized) return;
+        tickerInitialized = true;
+        
+        // Populate ticker
+        updateTicker();
+        
+        // Start coherence-based glitch effects
+        startGlitchSystem();
+        
+        // Start ambient message system
+        startAmbientMessages();
+        
+        // Check for story moments periodically
+        setInterval(checkStoryMoments, 5000);
+        
+        // Check conditional messages
+        setInterval(checkConditionalMessages, 10000);
+        
+        // Occasionally show Feynman diagrams in log
+        setInterval(() => {
+            if (Math.random() < 0.05 && ResourceManager.get('knowledge') >= 50) {
+                const diagram = feynmanDiagrams[Math.floor(Math.random() * feynmanDiagrams.length)];
+                UI.addLogEntry(`📊 ${diagram}`, 'mysterious');
+            }
+        }, 60000);
+    }
+    
+    function updateTicker() {
+        const ticker = document.getElementById('ticker-content');
+        if (!ticker) return;
+        
+        // Select messages based on game progress
+        const totalEnergy = StateManager.get('resources.energy.total') || 0;
+        const realityLevel = PrestigeManager.getRealityLevel();
+        
+        let availableMessages = tickerMessages.slice(0, 10); // Early messages
+        
+        if (totalEnergy >= 5000) {
+            availableMessages = tickerMessages.slice(0, 20); // Mid messages
+        }
+        if (totalEnergy >= 100000) {
+            availableMessages = tickerMessages.slice(0, 30); // Late messages
+        }
+        if (realityLevel >= 1) {
+            availableMessages = tickerMessages; // All messages
+        }
+        
+        // Shuffle and join
+        const shuffled = availableMessages.sort(() => Math.random() - 0.5).slice(0, 8);
+        const separator = "   ◈   ";
+        ticker.textContent = shuffled.join(separator) + separator;
+        
+        // Refresh ticker content periodically
+        setTimeout(updateTicker, 120000); // Every 2 minutes
+    }
+    
+    function startGlitchSystem() {
+        // Check coherence and apply visual effects
+        glitchInterval = setInterval(() => {
+            const coherence = ResourceManager.get('coherence');
+            const overlay = document.getElementById('reality-fracture-overlay');
+            
+            // Reality fracture overlay for very low coherence
+            if (coherence <= 15) {
+                overlay?.classList.add('active');
+            } else {
+                overlay?.classList.remove('active');
+            }
+            
+            // Apply text glitch to random elements when coherence is low
+            if (coherence <= 40 && Date.now() - lastGlitchCheck > 2000) {
+                lastGlitchCheck = Date.now();
+                applyRandomGlitch(coherence);
+            }
+        }, 500);
+    }
+    
+    function applyRandomGlitch(coherence) {
+        // Find text elements to potentially glitch
+        const glitchTargets = [
+            ...document.querySelectorAll('.resource-value'),
+            ...document.querySelectorAll('.generator-name'),
+            ...document.querySelectorAll('.upgrade-name'),
+            ...document.querySelectorAll('.log-entry')
+        ];
+        
+        if (glitchTargets.length === 0) return;
+        
+        // Randomly select 1-3 elements to glitch
+        const numGlitches = coherence <= 20 ? 3 : (coherence <= 30 ? 2 : 1);
+        
+        for (let i = 0; i < numGlitches; i++) {
+            const target = glitchTargets[Math.floor(Math.random() * glitchTargets.length)];
+            if (!target || target.classList.contains('glitch-text')) continue;
+            
+            // Apply glitch class
+            const severity = coherence <= 20 ? 'glitch-severe' : 'glitch-text';
+            target.classList.add(severity);
+            
+            // Remove after brief period
+            setTimeout(() => {
+                target.classList.remove('glitch-text', 'glitch-severe');
+            }, coherence <= 20 ? 800 : 400);
+        }
+        
+        // Occasionally corrupt text content briefly
+        if (coherence <= 25 && Math.random() < 0.3) {
+            const target = glitchTargets[Math.floor(Math.random() * glitchTargets.length)];
+            if (target) {
+                const original = target.textContent;
+                target.textContent = corruptText(original);
+                setTimeout(() => {
+                    target.textContent = original;
+                }, 150);
+            }
+        }
+    }
+    
+    function corruptText(text) {
+        const glitchChars = '̷̸̴̵̶̡̢̧̨̛̖̗̘̙̜̝̞̟̠̣̤̥̦̩̪̫̬̭̮̯̰̱̲̳̹̺̻̼͇͈͉͍͎̀́̂̃̄̅̆̇̈̉̊̋̌̍̎̏̐̑̒̓̔̽̾̿̀́͂̓̈́͆͊͋͌̕̚ͅ͏͓͔͕͖͙͚͐͑͒͗͛ͣͤͥͦͧͨͩͪͫͬͭͮͯ͘͜͟͢͝͞͠͡';
+        let result = '';
+        for (let char of text) {
+            result += char;
+            if (Math.random() < 0.15) {
+                result += glitchChars[Math.floor(Math.random() * glitchChars.length)];
+            }
+        }
+        return result;
+    }
+    
+    function checkStoryMoments() {
+        const totalEnergy = StateManager.get('resources.energy.total') || 0;
+        const triggeredStories = StateManager.get('triggeredStories') || [];
+        
+        for (const moment of storyMoments) {
+            if (totalEnergy >= moment.threshold && !triggeredStories.includes(moment.threshold)) {
+                // Mark as triggered
+                triggeredStories.push(moment.threshold);
+                StateManager.set('triggeredStories', triggeredStories);
+                
+                // Show story modal after a delay
+                setTimeout(() => showStoryModal(moment), 2000);
+                break; // Only one at a time
+            }
+        }
+    }
+    
+    function showStoryModal(moment) {
+        const modal = document.getElementById('story-modal');
+        const content = document.getElementById('story-content');
+        if (!modal || !content) return;
+        
+        let html = `<h2>${moment.title}</h2>`;
+        moment.content.forEach(line => {
+            html += `<p>${line}</p>`;
+        });
+        html += `<button onclick="document.getElementById('story-modal').classList.remove('active')">Continue</button>`;
+        
+        content.innerHTML = html;
+        modal.classList.add('active');
+        
+        UI.addLogEntry(`📖 ${moment.title}`, 'mysterious');
+    }
+    
+    function checkConditionalMessages() {
+        const shownConditional = StateManager.get('shownConditionalMessages') || [];
+        
+        for (const msg of conditionalMessages) {
+            if (msg.once && shownConditional.includes(msg.once)) continue;
+            
+            try {
+                if (msg.condition()) {
+                    if (msg.once) {
+                        shownConditional.push(msg.once);
+                        StateManager.set('shownConditionalMessages', shownConditional);
+                    }
+                    
+                    setTimeout(() => {
+                        UI.addLogEntry(msg.message, msg.type || 'mysterious');
+                    }, Math.random() * 3000);
+                }
+            } catch (e) {
+                // Condition not ready yet
+            }
+        }
+    }
+    
+    // Ambient messages that appear randomly during gameplay
+    const ambientMessages = [
+        // Short observations
+        "...",
+        "The air tastes of probability.",
+        "A flower blooms somewhere you can't see.",
+        "The quantum field hums.",
+        "Static. Just for a moment.",
+        "Did something move?",
+        "The numbers feel... aware.",
+        "A chill. Then nothing.",
+        "The screen flickers. Did you notice?",
+        "Someone else is clicking, somewhere.",
+        "The garden breathes.",
+        "Time skipped. Or did it?",
+        "An echo of something that hasn't happened yet.",
+        "The math is beautiful today.",
+        "You're being remembered.",
+        "Patterns emerge. Patterns dissolve.",
+        "The void between clicks is infinite.",
+        "Each harvest is a small death. And a small birth.",
+        "The flowers dream in wave functions.",
+        "Are you growing the garden, or is it growing you?",
+    ];
+    
+    // Longer, rarer messages
+    const rareAmbientMessages = [
+        "In a garden exactly like this one, another you made a different choice. Both gardens thrive.",
+        "The coherence fluctuations form patterns. If you squint, they almost look like text.",
+        "Somewhere, a physicist proves that observation creates reality. They don't know about you yet.",
+        "The probability of you being here, doing this, approaches zero. Yet here you are.",
+        "Every particle in your body was once inside a star. Every star was once quantum fluctuations.",
+        "Feynman diagrams trace the paths your flowers never took.",
+        "The Standard Model accounts for everything except your garden. And consciousness. And dark matter.",
+        "In information theory, entropy is just another word for possibility. Your garden is very entropic.",
+        "Bell's inequality proves nonlocality. Your entangled flowers already knew this.",
+        "The cosmological horizon recedes at the speed of light. Your garden doesn't care.",
+    ];
+    
+    let lastAmbientMessage = 0;
+    
+    function checkAmbientMessages() {
+        const now = Date.now();
+        const minInterval = 45000; // Minimum 45 seconds between ambient messages
+        
+        if (now - lastAmbientMessage < minInterval) return;
+        
+        // Small chance of ambient message
+        if (Math.random() > 0.03) return; // 3% chance per check
+        
+        lastAmbientMessage = now;
+        
+        // Rare messages are 10% of ambient messages
+        const messagePool = Math.random() < 0.1 ? rareAmbientMessages : ambientMessages;
+        const message = messagePool[Math.floor(Math.random() * messagePool.length)];
+        
+        UI.addLogEntry(message, 'mysterious');
+    }
+    
+    // Start ambient message checks
+    function startAmbientMessages() {
+        setInterval(checkAmbientMessages, 5000); // Check every 5 seconds
+    }
+    
+    // Public methods
+    function addTickerMessage(message) {
+        tickerMessages.push(message);
+    }
+    
+    function triggerGlitch(duration = 1000) {
+        const elements = document.querySelectorAll('.resource-value, h1, .generator-name');
+        elements.forEach(el => el.classList.add('glitch-severe'));
+        setTimeout(() => {
+            elements.forEach(el => el.classList.remove('glitch-severe'));
+        }, duration);
+    }
+    
+    return {
+        initialize,
+        updateTicker,
+        triggerGlitch,
+        addTickerMessage,
+        showStoryModal
+    };
+})();
+
+// ============================================
+// MODULE: Tips Manager - Context-Sensitive Guidance
+// ============================================
+const TipsManager = (() => {
+    const shownTips = new Set();
+    let tipCooldown = 0;
+    const TIP_COOLDOWN = 30; // seconds between tips
+    
+    const tips = {
+        // Early game tips
+        firstEnergy: {
+            condition: () => ResourceManager.get('energy') >= 10 && ResourceManager.get('energy') < 30,
+            message: '💡 Keep clicking! At 30 energy you can buy Seed Synthesis.',
+            priority: 10,
+            once: true
+        },
+        buySeedProduction: {
+            condition: () => ResourceManager.get('energy') >= 30 && !UpgradeManager.isPurchased('seedProduction'),
+            message: '💡 You have enough energy! Check the Upgrades tab for Seed Synthesis.',
+            priority: 9,
+            once: true
+        },
+        gotSeeds: {
+            condition: () => ResourceManager.get('seeds') > 0 && StateManager.get('stats.totalPlantsHarvested') === 0,
+            message: '💡 You have seeds! Click an empty plot (+) in the garden to plant.',
+            priority: 8,
+            once: true
+        },
+        firstPlant: {
+            condition: () => {
+                const plots = StateManager.get('garden.plots') || [];
+                return plots.some(p => p.plant) && StateManager.get('stats.totalPlantsHarvested') === 0;
+            },
+            message: '💡 Great! Watch your plant grow. Hover over it to speed up growth!',
+            priority: 7,
+            once: true
+        },
+        firstHarvestReady: {
+            condition: () => {
+                const plots = StateManager.get('garden.plots') || [];
+                return plots.some(p => p.growth >= 100 && p.plant !== null);
+            },
+            message: '💡 Your plant is ready! Click it to harvest for resources and more seeds.',
+            priority: 6,
+            once: true
+        },
+        
+        // Mid-game tips
+        buyFirstGenerator: {
+            condition: () => ResourceManager.get('energy') >= 15 && GeneratorManager.getOwned('quantumLily') === 0,
+            message: '💡 You can buy a Quantum Lily in the Plants tab for passive energy!',
+            priority: 5,
+            once: true
+        },
+        coherenceIntro: {
+            condition: () => {
+                const generators = Object.keys(GameData.generators).reduce((sum, id) => 
+                    sum + GeneratorManager.getOwned(id), 0);
+                return generators >= 3 && !shownTips.has('coherenceIntro');
+            },
+            message: '💡 Notice the Coherence bar? Clicking maintains it. Low coherence = lower production.',
+            priority: 4,
+            once: true
+        },
+        entanglementIntro: {
+            condition: () => UpgradeManager.isPurchased('entanglementBasics') && StateManager.get('stats.plantsEntangled') === 0,
+            message: '💡 Try the Entangle button! Link two plants for bonus yields.',
+            priority: 4,
+            once: true
+        },
+        
+        // Recurring tips
+        lowCoherence: {
+            condition: () => ResourceManager.get('coherence') < 20,
+            message: '⚠️ Low coherence! Click the Quantum Core to restore it.',
+            priority: 3,
+            once: false
+        },
+        unlockAvailable: {
+            condition: () => {
+                return Object.entries(GameData.upgrades).some(([id, data]) => {
+                    return UpgradeManager.isUnlocked(id) && !UpgradeManager.isPurchased(id) && UpgradeManager.canBuy(id);
+                });
+            },
+            message: '✨ An upgrade is available! Check the Upgrades tab.',
+            priority: 2,
+            once: false
+        }
+    };
+    
+    function update(deltaTime) {
+        if (tipCooldown > 0) {
+            tipCooldown -= deltaTime;
+            return;
+        }
+        
+        // Find highest priority tip that should be shown
+        let bestTip = null;
+        let bestPriority = -1;
+        
+        for (const [id, tip] of Object.entries(tips)) {
+            if (tip.once && shownTips.has(id)) continue;
+            if (!tip.condition()) continue;
+            
+            if (tip.priority > bestPriority) {
+                bestPriority = tip.priority;
+                bestTip = { id, ...tip };
+            }
+        }
+        
+        if (bestTip) {
+            UI.addLogEntry(bestTip.message, 'tip');
+            shownTips.add(bestTip.id);
+            tipCooldown = TIP_COOLDOWN;
+        }
+    }
+    
+    function reset() {
+        shownTips.clear();
+        tipCooldown = 0;
+    }
+    
+    return { update, reset };
 })();
 
 // ============================================
@@ -4633,6 +6578,35 @@ const UI = (() => {
             }
         });
         
+        // Event delegation for stats tab (collapse reality button)
+        document.getElementById('stats-content').addEventListener('click', (e) => {
+            const collapseBtn = e.target.closest('#collapse-reality-btn');
+            if (collapseBtn && !collapseBtn.disabled) {
+                // Confirm collapse with similar pattern to reset
+                if (collapseBtn.dataset.confirmPending === 'true') {
+                    // Actually collapse
+                    if (PrestigeManager.collapse()) {
+                        collapseBtn.dataset.confirmPending = 'false';
+                        renderStats();
+                    }
+                } else {
+                    // First click - confirm
+                    collapseBtn.dataset.confirmPending = 'true';
+                    collapseBtn.textContent = '⚠️ Click again to collapse reality!';
+                    collapseBtn.style.background = 'linear-gradient(135deg, #ff4444, #cc0000)';
+                    
+                    // Reset after 3 seconds
+                    setTimeout(() => {
+                        if (collapseBtn.dataset.confirmPending === 'true') {
+                            collapseBtn.dataset.confirmPending = 'false';
+                            collapseBtn.textContent = '🌌 Collapse Reality';
+                            collapseBtn.style.background = '';
+                        }
+                    }, 3000);
+                }
+            }
+        });
+        
         // Event delegation for plant modal options
         document.getElementById('plant-options').addEventListener('click', (e) => {
             const opt = e.target.closest('.plant-option');
@@ -4671,6 +6645,170 @@ const UI = (() => {
                     renderResources();
                 }
             }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Don't trigger shortcuts when typing in input fields
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            const key = e.key.toLowerCase();
+            
+            switch (key) {
+                case 'e':
+                    // Toggle entangle mode
+                    const entangleBtn = document.getElementById('entangle-btn');
+                    if (entangleBtn && !entangleBtn.disabled) {
+                        entangleBtn.click();
+                    }
+                    break;
+                    
+                case 'h':
+                    // Toggle auto-harvest
+                    if (UpgradeManager.isPurchased('autoHarvest')) {
+                        const current = StateManager.get('settings.autoHarvestEnabled');
+                        StateManager.set('settings.autoHarvestEnabled', !current);
+                        addLogEntry(`Auto-harvest: ${!current ? 'ON' : 'OFF'}`, 'highlight');
+                        updateGardenControls();
+                    }
+                    break;
+                    
+                case 'p':
+                    // Toggle auto-plant
+                    if (UpgradeManager.isPurchased('autoPlant')) {
+                        const current = StateManager.get('settings.autoPlantEnabled');
+                        StateManager.set('settings.autoPlantEnabled', !current);
+                        addLogEntry(`Auto-plant: ${!current ? 'ON' : 'OFF'}`, 'highlight');
+                        updateGardenControls();
+                    }
+                    break;
+                    
+                case '1':
+                case '2':
+                case '3':
+                    // Tab shortcuts
+                    const tabs = ['generators', 'upgrades', 'stats'];
+                    const tabIndex = parseInt(key) - 1;
+                    if (tabs[tabIndex]) {
+                        switchTab(tabs[tabIndex]);
+                    }
+                    break;
+                    
+                case ' ':
+                    // Space - click quantum core
+                    e.preventDefault();
+                    const core = document.getElementById('quantum-core');
+                    if (core) {
+                        handleCoreClick({ target: core });
+                    }
+                    break;
+                    
+                case 'r':
+                    // R - harvest all ready plants
+                    const plots = StateManager.get('garden.plots') || [];
+                    let harvestedCount = 0;
+                    plots.forEach((plot, index) => {
+                        if (plot.plant && plot.progress >= 1) {
+                            const result = GardenManager.harvest(index);
+                            if (result && result.yield) {
+                                ResourceGainTracker.showHarvestFloat(index, result.yield);
+                                harvestedCount++;
+                            }
+                        }
+                    });
+                    if (harvestedCount > 0) {
+                        addLogEntry(`🌾 Harvested ${harvestedCount} plants with hotkey`, 'success');
+                        renderGarden();
+                        renderResources();
+                    }
+                    break;
+                    
+                case 'escape':
+                    // Escape - close modals
+                    const modal = document.getElementById('plant-modal');
+                    if (modal && modal.classList.contains('active')) {
+                        modal.classList.remove('active');
+                        selectedPlotIndex = null;
+                    }
+                    const settingsModal = document.getElementById('settings-modal');
+                    if (settingsModal && settingsModal.classList.contains('active')) {
+                        settingsModal.classList.remove('active');
+                    }
+                    // Cancel entanglement mode
+                    if (GardenManager.getEntanglementMode().active) {
+                        GardenManager.setEntanglementMode(false);
+                        updateGardenControls();
+                        renderGarden();
+                    }
+                    break;
+                    
+                case '?':
+                    // Show keyboard shortcuts help
+                    showKeyboardHelp();
+                    break;
+            }
+        });
+    }
+    
+    function showKeyboardHelp() {
+        // Remove existing help modal if present
+        const existing = document.getElementById('keyboard-help-modal');
+        if (existing) {
+            existing.remove();
+            return;
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal active';
+        modal.id = 'keyboard-help-modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 400px;">
+                <h3>⌨️ Keyboard Shortcuts</h3>
+                <div style="display: grid; gap: 8px; margin-top: 16px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">Space</span>
+                        <span>Click quantum core</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">R</span>
+                        <span>Harvest all ready plants</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">E</span>
+                        <span>Toggle entanglement mode</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">H</span>
+                        <span>Toggle auto-harvest</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">P</span>
+                        <span>Toggle auto-plant</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">1 / 2 / 3</span>
+                        <span>Switch tabs</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">Esc</span>
+                        <span>Close modal / cancel</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-dim);">?</span>
+                        <span>Toggle this help</span>
+                    </div>
+                </div>
+                <button class="action-btn" style="width: 100%; margin-top: 16px;" 
+                        onclick="document.getElementById('keyboard-help-modal').remove()">
+                    Got it!
+                </button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Close on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
         });
     }
     
@@ -4716,6 +6854,19 @@ const UI = (() => {
         const newCoherence = Math.min(100, currentCoherence + coherenceRestore);
         StateManager.set('resources.coherence.amount', newCoherence);
         
+        // Visual feedback when hitting 100% coherence
+        if (currentCoherence < 100 && newCoherence >= 100) {
+            const coherenceBar = document.getElementById('coherence-bar-container');
+            if (coherenceBar) {
+                coherenceBar.classList.add('coherence-maxed');
+                setTimeout(() => coherenceBar.classList.remove('coherence-maxed'), 500);
+            }
+            // Also add log message first time
+            if (currentCoherence < 95) {
+                addLogEntry('🌀 Coherence fully restored!', 'success');
+            }
+        }
+        
         // Build quantum burst charge (combo speeds it up!)
         quantumBurstCharge += 1 + (coherence / 50) + (clickCombo / 25);
         
@@ -4753,32 +6904,37 @@ const UI = (() => {
     }
     
     function updateComboDisplay() {
-        let comboEl = document.getElementById('combo-display');
+        const comboEl = document.getElementById('combo-display');
+        const comboValue = document.getElementById('combo-value');
+        
+        if (!comboEl || !comboValue) return;
         
         if (clickCombo >= 3) {
-            if (!comboEl) {
-                comboEl = document.createElement('div');
-                comboEl.id = 'combo-display';
-                document.getElementById('quantum-core-section').appendChild(comboEl);
-            }
+            comboEl.classList.remove('hidden');
+            comboValue.textContent = clickCombo;
             
-            comboEl.textContent = `${clickCombo}x COMBO!`;
-            comboEl.className = 'combo-display';
-            
+            // Color based on combo level
             if (clickCombo >= 25) {
-                comboEl.classList.add('mega');
+                comboValue.style.color = 'var(--quantum-gold)';
             } else if (clickCombo >= 10) {
-                comboEl.classList.add('super');
+                comboValue.style.color = 'var(--quantum-cyan)';
+            } else {
+                comboValue.style.color = 'var(--quantum-orange)';
             }
+            
+            // Re-trigger animation
+            comboEl.style.animation = 'none';
+            comboEl.offsetHeight; // Force reflow
+            comboEl.style.animation = 'combo-pulse 0.3s ease-out';
             
             // Fade out if no more clicks
-            clearTimeout(comboEl.fadeTimer);
-            comboEl.fadeTimer = setTimeout(() => {
-                comboEl.classList.add('fading');
-                setTimeout(() => {
-                    if (comboEl.parentNode) comboEl.remove();
-                }, 500);
+            clearTimeout(comboEl._fadeTimer);
+            comboEl._fadeTimer = setTimeout(() => {
+                comboEl.classList.add('hidden');
+                clickCombo = 0;
             }, COMBO_TIMEOUT + 200);
+        } else {
+            comboEl.classList.add('hidden');
         }
     }
     
@@ -4820,24 +6976,17 @@ const UI = (() => {
     }
     
     function updateBurstIndicator() {
-        let indicator = document.getElementById('burst-indicator');
-        if (!indicator) {
-            // Create burst indicator under click power
-            const powerDisplay = document.getElementById('core-power-display');
-            indicator = document.createElement('div');
-            indicator.id = 'burst-indicator';
-            indicator.innerHTML = `
-                <div class="burst-bar">
-                    <div class="burst-fill" id="burst-fill"></div>
-                </div>
-                <div class="burst-label">Quantum Burst</div>
-            `;
-            powerDisplay.after(indicator);
-        }
-        
         const fill = document.getElementById('burst-fill');
         if (fill) {
-            fill.style.width = (quantumBurstCharge / BURST_THRESHOLD * 100) + '%';
+            const percent = (quantumBurstCharge / BURST_THRESHOLD * 100);
+            fill.style.width = percent + '%';
+            
+            // Add charged class when near full
+            if (percent >= 90) {
+                fill.classList.add('charged');
+            } else {
+                fill.classList.remove('charged');
+            }
         }
     }
     
@@ -4905,7 +7054,7 @@ const UI = (() => {
             },
             fragments: {
                 title: '💠 Reality Fragments',
-                description: 'Permanent currency surviving prestige. Coming soon!',
+                description: 'Permanent shards of collapsed realities. Used for powerful persistent upgrades.',
             }
         };
         
@@ -5036,8 +7185,24 @@ const UI = (() => {
         const grid = document.getElementById('garden-grid');
         const size = GardenManager.getSize();
         const cols = Math.ceil(Math.sqrt(size));
+        const rows = Math.ceil(size / cols);
         
-        grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        // Calculate optimal plot size based on available space
+        const container = grid.parentElement;
+        const containerWidth = container.clientWidth - 32; // Subtract padding
+        const containerHeight = container.clientHeight - 100; // Subtract header space
+        
+        // Calculate max plot size that fits, maintaining square aspect
+        const gapSize = 8; // matches --spacing-sm
+        const maxPlotWidth = (containerWidth - (cols - 1) * gapSize) / cols;
+        const maxPlotHeight = (containerHeight - (rows - 1) * gapSize) / rows;
+        
+        // Use the smaller dimension to keep plots square, with 180px max and 50px min
+        const plotSize = Math.min(maxPlotWidth, maxPlotHeight, 180);
+        const finalSize = Math.max(Math.floor(plotSize), 50);
+        
+        grid.style.gridTemplateColumns = `repeat(${cols}, ${finalSize}px)`;
+        grid.style.gridTemplateRows = `repeat(${rows}, ${finalSize}px)`;
         
         let html = '';
         const plots = StateManager.get('garden.plots') || [];
@@ -5114,6 +7279,57 @@ const UI = (() => {
         updateEntanglementLines();
     }
     
+    // Update a single plot without full re-render (for animations)
+    function updateSinglePlot(plotIndex) {
+        const plotEl = document.querySelector(`.garden-plot[data-index="${plotIndex}"]`);
+        if (!plotEl) return;
+        
+        const plot = GardenManager.getPlot(plotIndex);
+        const hasPlant = plot && plot.plant !== null;
+        const isReady = hasPlant && plot.progress >= 1;
+        const plantData = hasPlant ? GameData.generators[plot.plant] : null;
+        const mutation = plot?.mutation ? GardenManager.getMutationInfo(plot.mutation) : null;
+        
+        // Update classes (match renderGarden: empty, planted, ready)
+        plotEl.classList.toggle('empty', !hasPlant);
+        plotEl.classList.toggle('planted', hasPlant && !isReady);
+        plotEl.classList.toggle('ready', isReady);
+        
+        // Update content (class is 'plot-plant', not 'plant-emoji')
+        const plantEl = plotEl.querySelector('.plot-plant');
+        const progressEl = plotEl.querySelector('.plot-progress');
+        const timerEl = plotEl.querySelector('.plot-timer');
+        
+        if (hasPlant) {
+            if (plantEl) {
+                plantEl.textContent = plantData.icon;
+                plantEl.style.filter = mutation ? `drop-shadow(0 0 4px ${mutation.color})` : '';
+            }
+            if (progressEl) {
+                progressEl.style.width = `${Math.min(100, plot.progress * 100)}%`;
+            }
+            if (timerEl && plot.progress < 1) {
+                const remaining = plantData.growthTime * (1 - plot.progress);
+                timerEl.textContent = Utils.formatTime(remaining);
+            }
+        } else {
+            // Plant was harvested - show empty state with fade effect
+            if (plantEl) {
+                plantEl.style.opacity = '0';
+                plantEl.style.transform = 'scale(0.5)';
+                setTimeout(() => {
+                    plantEl.textContent = '';
+                    plantEl.style.opacity = '';
+                    plantEl.style.transform = '';
+                }, 200);
+            }
+            if (progressEl) progressEl.style.width = '0%';
+            if (timerEl) timerEl.textContent = '';
+            plotEl.classList.remove('planted', 'ready');
+            plotEl.classList.add('empty');
+        }
+    }
+    
     function updateEntanglementLines() {
         const svg = document.getElementById('entanglement-lines');
         if (!svg) return;
@@ -5181,9 +7397,9 @@ const UI = (() => {
         if (UpgradeManager.isPurchased('autoHarvest')) {
             const enabled = StateManager.get('settings.autoHarvestEnabled');
             html += `
-                <div class="auto-toggle ${enabled ? 'active' : ''}" id="toggle-autoharvest" title="Auto-harvest mature plants every 10s">
+                <div class="auto-toggle ${enabled ? 'active' : ''}" id="toggle-autoharvest" title="Auto-harvest mature plants every 10s (H)">
                     <span class="toggle-indicator"></span>
-                    <span>🤖 Harvest</span>
+                    <span>🤖 (H)arvest</span>
                 </div>
             `;
         }
@@ -5192,9 +7408,9 @@ const UI = (() => {
         if (UpgradeManager.isPurchased('autoPlant')) {
             const enabled = StateManager.get('settings.autoPlantEnabled');
             html += `
-                <div class="auto-toggle ${enabled ? 'active' : ''}" id="toggle-autoplant" title="Auto-plant in empty plots every 5s">
+                <div class="auto-toggle ${enabled ? 'active' : ''}" id="toggle-autoplant" title="Auto-plant in empty plots every 5s (P)">
                     <span class="toggle-indicator"></span>
-                    <span>🌱 Plant</span>
+                    <span>🌱 (P)lant</span>
                 </div>
             `;
         }
@@ -5205,10 +7421,10 @@ const UI = (() => {
             const threads = ResourceManager.get('entanglement');
             
             if (mode.active) {
-                html += `<button class="header-btn" id="entangle-btn" style="background: var(--quantum-red); color: white;">❌ Cancel</button>`;
+                html += `<button class="header-btn" id="entangle-btn" style="background: var(--quantum-red); color: white;">❌ Cancel (E)</button>`;
             } else {
                 const disabled = threads < 1 ? 'disabled' : '';
-                html += `<button class="header-btn" id="entangle-btn" ${disabled}>🔗 Entangle (${Math.floor(threads)})</button>`;
+                html += `<button class="header-btn" id="entangle-btn" ${disabled}>🔗 (E)ntangle (${Math.floor(threads)})</button>`;
             }
         }
         
@@ -5290,18 +7506,33 @@ const UI = (() => {
         if (plot.plant && plot.progress >= 1) {
             // Harvest ready plant - get quantum yield
             const plantData = GameData.generators[plot.plant];
-            const actualYield = GardenManager.harvest(index);
+            const harvestResult = GardenManager.harvest(index);
             
-            if (actualYield) {
-                // Show floating harvest numbers
-                ResourceGainTracker.showHarvestFloat(index, actualYield);
+            if (harvestResult && harvestResult.yield) {
+                // Show floating harvest numbers for main plant
+                ResourceGainTracker.showHarvestFloat(index, harvestResult.yield);
                 
                 // Format yield for log
-                const yieldText = Object.entries(actualYield)
+                const yieldText = Object.entries(harvestResult.yield)
                     .map(([r, a]) => `${GameData.resources[r].icon}${a}`)
                     .join(' ');
                     
                 addLogEntry(`Harvested ${plantData.name}: ${yieldText}`, 'success');
+                
+                // Log partner harvest if there was an entangled plant
+                if (harvestResult.partnerYield && harvestResult.partnerPlant) {
+                    // Show floating numbers for partner too
+                    if (harvestResult.partnerId !== null && harvestResult.partnerId !== undefined) {
+                        ResourceGainTracker.showHarvestFloat(harvestResult.partnerId, harvestResult.partnerYield);
+                    }
+                    
+                    const partnerData = GameData.generators[harvestResult.partnerPlant];
+                    const partnerYieldText = Object.entries(harvestResult.partnerYield)
+                        .map(([r, a]) => `${GameData.resources[r].icon}${a}`)
+                        .join(' ');
+                    addLogEntry(`🔗 Entangled ${partnerData.name}: ${partnerYieldText}`, 'success');
+                }
+                
                 renderGarden();
                 renderResources();
             }
@@ -5454,11 +7685,11 @@ const UI = (() => {
                                 ${!isUnlocked || !canAfford10 ? 'disabled' : ''}>
                             ×10
                         </button>
-                        <button class="generator-buy-btn small" 
+                        <button class="generator-buy-btn max-btn" 
                                 data-generator="${id}" 
                                 data-amount="max"
                                 ${!isUnlocked || maxAffordable === 0 ? 'disabled' : ''}>
-                            Max${maxAffordable > 0 ? ` (${maxAffordable})` : ''}
+                            Max${maxAffordable > 0 ? `<br>(${maxAffordable})` : ''}
                         </button>
                     </div>
                 </div>
@@ -5513,7 +7744,92 @@ const UI = (() => {
         const unlockedAchievements = achievements.filter(a => a.unlocked);
         const lockedAchievements = achievements.filter(a => !a.unlocked && !a.secret);
         
+        // Check prestige status
+        const prestigeUnlocked = PrestigeManager.isUnlocked();
+        const realityLevel = PrestigeManager.getRealityLevel();
+        const fragments = ResourceManager.get('fragments') || 0;
+        const fragmentsOnCollapse = PrestigeManager.getFragmentsOnCollapse();
+        const canCollapse = PrestigeManager.canCollapse();
+        const productionBonus = PrestigeManager.getProductionMultiplier();
+        const totalEnergy = StateManager.get('resources.energy.total') || 0;
+        
+        // Calculate next fragment threshold
+        const FRAGMENT_BASE = 1000000;
+        let nextThresholdText = '';
+        if (totalEnergy < FRAGMENT_BASE) {
+            nextThresholdText = `First fragment at ${Utils.formatNumber(FRAGMENT_BASE)} total energy`;
+        } else {
+            // Current fragments from formula (without first-time bonus)
+            const currentFromFormula = Math.floor(Math.log10(totalEnergy / FRAGMENT_BASE) * 3) + 1;
+            // Next threshold
+            const nextThreshold = Math.pow(10, currentFromFormula / 3) * FRAGMENT_BASE;
+            if (totalEnergy < nextThreshold) {
+                const progress = ((totalEnergy - (Math.pow(10, (currentFromFormula - 1) / 3) * FRAGMENT_BASE)) / 
+                                 (nextThreshold - Math.pow(10, (currentFromFormula - 1) / 3) * FRAGMENT_BASE) * 100).toFixed(0);
+                nextThresholdText = `Next: ${Utils.formatNumber(nextThreshold)} (${progress}%)`;
+            } else {
+                nextThresholdText = `Keep earning for more fragments!`;
+            }
+        }
+        
+        // Build prestige section HTML
+        let prestigeHtml = '';
+        if (prestigeUnlocked) {
+            const needsRealityAwareness = !UpgradeManager.isPurchased('realityAwareness');
+            const totalEnergy = StateManager.get('resources.energy.total') || 0;
+            const needsMoreEnergy = !needsRealityAwareness && fragmentsOnCollapse === 0;
+            
+            // Determine the warning/info text
+            let warningText;
+            if (needsRealityAwareness) {
+                warningText = '🔮 Purchase Reality Awareness upgrade to unlock collapse';
+            } else if (needsMoreEnergy) {
+                warningText = '⏳ Accumulate 1M+ total energy to earn fragments';
+            } else if (canCollapse) {
+                warningText = '⚠️ Resets progress but keeps fragments, achievements & persistent upgrades';
+            } else {
+                warningText = '💠 Ready to transcend when you are';
+            }
+            
+            prestigeHtml = `
+                <div class="prestige-section">
+                    <h4>💠 Reality Collapse</h4>
+                    <div class="prestige-info">
+                        <div class="prestige-stat">
+                            <span class="label">Reality Level</span>
+                            <span class="value">${realityLevel}</span>
+                        </div>
+                        <div class="prestige-stat">
+                            <span class="label">Reality Fragments</span>
+                            <span class="value">${Utils.formatNumber(fragments)}</span>
+                        </div>
+                        ${productionBonus > 1 ? `
+                            <div class="prestige-stat">
+                                <span class="label">Production Bonus</span>
+                                <span class="value highlight">+${Math.round((productionBonus - 1) * 100)}%</span>
+                            </div>
+                        ` : ''}
+                        <div class="prestige-stat">
+                            <span class="label">Fragments on Collapse</span>
+                            <span class="value ${fragmentsOnCollapse > 0 ? 'highlight' : ''}">${fragmentsOnCollapse > 0 ? '+' + fragmentsOnCollapse : (needsRealityAwareness ? 'Locked' : '0')}</span>
+                        </div>
+                        <div class="prestige-stat">
+                            <span class="label">Progress</span>
+                            <span class="value" style="font-size: 0.75rem; color: var(--text-dim);">${nextThresholdText}</span>
+                        </div>
+                    </div>
+                    <button class="collapse-btn" id="collapse-reality-btn" ${!canCollapse ? 'disabled' : ''}>
+                        🌌 Collapse Reality
+                    </button>
+                    <p class="collapse-warning">
+                        ${warningText}
+                    </p>
+                </div>
+            `;
+        }
+        
         container.innerHTML = `
+            ${prestigeHtml}
             <div class="stat-group">
                 <h4>🏆 Achievements (${unlockedAchievements.length}/${achievements.length})</h4>
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
@@ -5654,19 +7970,34 @@ const UI = (() => {
         // Update generator buy buttons
         document.querySelectorAll('.generator-buy-btn').forEach(btn => {
             const id = btn.dataset.generator;
+            const amount = btn.dataset.amount;
             if (!id) return;
             
             const isUnlocked = GeneratorManager.isUnlocked(id);
-            const cost = GeneratorManager.getCost(id);
-            const canAfford = ResourceManager.canAfford(cost);
             
-            btn.disabled = !isUnlocked || !canAfford;
-            
-            if (isUnlocked) {
-                let costText = Object.entries(cost).map(([r, a]) => 
-                    `${GameData.resources[r].icon} ${Utils.formatNumber(a)}`
-                ).join(' ');
-                btn.textContent = `Buy (${costText})`;
+            if (amount === '1') {
+                // Buy 1 button - show cost
+                const cost = GeneratorManager.getCost(id, 1);
+                const canAfford = ResourceManager.canAfford(cost);
+                btn.disabled = !isUnlocked || !canAfford;
+                
+                if (isUnlocked) {
+                    let costText = Object.entries(cost).map(([r, a]) => 
+                        `${GameData.resources[r].icon} ${Utils.formatNumber(a)}`
+                    ).join(' ');
+                    btn.textContent = `Buy 1 (${costText})`;
+                }
+            } else if (amount === '10') {
+                // Buy 10 button
+                const cost10 = GeneratorManager.getCost(id, 10);
+                const canAfford10 = ResourceManager.canAfford(cost10);
+                btn.disabled = !isUnlocked || !canAfford10;
+                btn.textContent = '×10';
+            } else if (amount === 'max') {
+                // Buy Max button
+                const maxAffordable = GeneratorManager.getMaxAffordable(id);
+                btn.disabled = !isUnlocked || maxAffordable === 0;
+                btn.innerHTML = maxAffordable > 0 ? `Max<br>(${maxAffordable})` : 'Max';
             }
         });
         
@@ -5754,13 +8085,13 @@ const UI = (() => {
         }
     }
     
-    function showNotification(title, message, type = '') {
+    function showNotification(title, message = '', type = '') {
         const container = document.getElementById('notification-container');
         const notification = document.createElement('div');
         notification.className = 'notification' + (type ? ' ' + type : '');
         notification.innerHTML = `
             <div class="notification-title">${title}</div>
-            <div class="notification-message">${message}</div>
+            ${message ? `<div class="notification-message">${message}</div>` : ''}
         `;
         
         container.appendChild(notification);
@@ -5770,6 +8101,113 @@ const UI = (() => {
             notification.style.transform = 'translateX(100px)';
             setTimeout(() => notification.remove(), 300);
         }, 3000);
+    }
+    
+    function updateNextUnlock() {
+        const container = document.getElementById('next-unlock-indicator');
+        const nameEl = document.getElementById('next-unlock-name');
+        const fillEl = document.getElementById('next-unlock-fill');
+        const percentEl = document.getElementById('next-unlock-percent');
+        
+        if (!container || !nameEl || !fillEl || !percentEl) return;
+        
+        // Find the next unlock (prioritize upgrades, then generators)
+        let bestUnlock = null;
+        let bestProgress = -1;
+        
+        // Check unlockable upgrades
+        Object.entries(GameData.upgrades).forEach(([id, data]) => {
+            if (UpgradeManager.isPurchased(id)) return;
+            if (data.unlocked || UpgradeManager.isUnlocked(id)) {
+                // Already unlocked but not purchased - show cost progress
+                const cost = Object.entries(data.cost)[0];
+                if (cost) {
+                    const [resource, amount] = cost;
+                    const current = ResourceManager.get(resource);
+                    const progress = Math.min(1, current / amount);
+                    if (progress > bestProgress && progress < 1) {
+                        bestProgress = progress;
+                        bestUnlock = {
+                            name: data.name,
+                            icon: data.icon,
+                            target: amount,
+                            current: current,
+                            resourceName: GameData.resources[resource]?.name || resource,
+                            resourceIcon: GameData.resources[resource]?.icon || '⚡',
+                            type: 'purchase'
+                        };
+                    }
+                }
+            } else if (data.unlockAt) {
+                // Check unlock progress
+                const current = StateManager.get(`resources.${data.unlockAt.resource}.total`) || 0;
+                const progress = Math.min(1, current / data.unlockAt.amount);
+                if (progress > bestProgress && progress < 1) {
+                    bestProgress = progress;
+                    bestUnlock = {
+                        name: data.name,
+                        icon: data.icon,
+                        target: data.unlockAt.amount,
+                        current: current,
+                        resourceName: GameData.resources[data.unlockAt.resource]?.name || data.unlockAt.resource,
+                        resourceIcon: GameData.resources[data.unlockAt.resource]?.icon || '⚡',
+                        type: 'unlock'
+                    };
+                }
+            }
+        });
+        
+        // Check unlockable generators
+        Object.entries(GameData.generators).forEach(([id, data]) => {
+            if (data.unlocked) return;
+            if (data.unlockAt) {
+                const current = StateManager.get(`resources.${data.unlockAt.resource}.total`) || 0;
+                const progress = Math.min(1, current / data.unlockAt.amount);
+                if (progress > bestProgress && progress < 1) {
+                    bestProgress = progress;
+                    bestUnlock = {
+                        name: data.name,
+                        icon: data.icon,
+                        target: data.unlockAt.amount,
+                        current: current,
+                        resourceName: GameData.resources[data.unlockAt.resource]?.name || data.unlockAt.resource,
+                        resourceIcon: GameData.resources[data.unlockAt.resource]?.icon || '⚡',
+                        type: 'unlock'
+                    };
+                }
+            }
+        });
+        
+        if (bestUnlock) {
+            container.classList.remove('hidden');
+            const percent = Math.floor(bestProgress * 100);
+            const verb = bestUnlock.type === 'purchase' ? 'Buy' : 'Unlock';
+            nameEl.innerHTML = `${bestUnlock.icon} ${bestUnlock.name}`;
+            fillEl.style.width = percent + '%';
+            percentEl.textContent = percent + '%';
+            
+            // Add pulse animation when close to unlock
+            if (percent >= 80) {
+                container.classList.add('near-unlock');
+            } else {
+                container.classList.remove('near-unlock');
+            }
+        } else {
+            // No more unlocks to show - hide or show completion message
+            const totalUnlocks = Object.keys(GameData.upgrades).length + Object.keys(GameData.generators).length;
+            const purchased = Object.keys(GameData.upgrades).filter(id => UpgradeManager.isPurchased(id)).length;
+            const unlocked = Object.keys(GameData.generators).filter(id => GameData.generators[id].unlocked).length;
+            
+            if (purchased + unlocked >= totalUnlocks) {
+                container.classList.add('hidden');
+            } else {
+                // There's something but we can't reach it yet
+                nameEl.innerHTML = '🔮 Keep exploring...';
+                fillEl.style.width = '100%';
+                percentEl.textContent = '??';
+                container.classList.remove('near-unlock');
+            }
+        }
     }
     
     return {
@@ -5784,6 +8222,9 @@ const UI = (() => {
         updateBuyButtons,
         updateClickPowerDisplay,
         updateCoherenceBar,
+        updateNextUnlock,
+        updateSinglePlot,
+        updateEntanglementLines,
         addLogEntry,
         showNotification,
         getSelectedPlotIndex
@@ -5827,6 +8268,7 @@ const GameLoop = (() => {
             UI.updateBuyButtons(); // Check if buttons should enable/disable
             UI.updateClickPowerDisplay(); // Update click power with coherence bonus
             UI.updateCoherenceBar(); // Update coherence bar
+            UI.updateNextUnlock(); // Update next unlock indicator
             uiTimer = 0;
         }
         
@@ -5921,8 +8363,14 @@ const GameLoop = (() => {
     // Initialize UI
     UI.initialize();
     
+    // Initialize Narrative System
+    NarrativeSystem.initialize();
+    
     // Calculate initial production
     GeneratorManager.calculateProduction();
+    
+    // Initialize next unlock display
+    UI.updateNextUnlock();
     
     // Start game loop
     GameLoop.start();
@@ -5982,6 +8430,16 @@ const GameLoop = (() => {
         if (StateManager.canSave() && !window.quantumGardenResetting) {
             StateManager.save();
         }
+    });
+    
+    // Handle window resize - update garden and entanglement lines
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        // Debounce resize events
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            UI.renderGarden();
+        }, 100);
     });
     
     // Attach coherence bar tooltip
