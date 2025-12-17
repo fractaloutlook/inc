@@ -277,4 +277,3 @@ const GameLoop = (() => {
     
     console.log('🌸 Quantum Garden initialized');
 })();
-</script>
