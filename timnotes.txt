@@ -1,9 +1,84 @@
-had a quantum lily with 3x time crystals production --- it produces zero. So maybe limit mutations to plants that can benefit.
 
 
-the log isn't showing the 2nd plant when harvesting a linked one -- seems to be giving the stuff, just not saying so in log
 
-make those +X's also show up in the space within the garden plot, all at once with the harvesting / effect?
+suggestions:
+
+can you make the little red LED lights on the autoplant autoharvest buttons take a teeny bit of time to fade in/up the glow? I know only ancient LEDs would even do that, IF that, but I think it'll look cool. Also when powering down.
+
+issues:
+
+when turning off auto-plant button, it resets the cyan progress bar on the other button
+
+------------------------- 9:56pm 12/04/25
+
+the old quantum events that popped up in the middle of the playfield that I said to put over the currencies panel on the left -- now just don't show up ever. Those were important weren't they?
+
+size to fill somehowww off again. 3 x 3 centered in large space. - screenshot
+
+the  +X/s counters for generators and such incoming do not take into account the coherence production % multiplier. You should see these values go down as coherence goes down, and restore when you click it back up to full -- it's possible they are falling but not going back up? My QE was like 7.2k/s and now it's 4.64.. I did let my coherence get down to zero while I walked away... still 4.64 when I refilled it though. Maybe just look into the logic behind how these are calculated and double check.
+[update: upon purchasing another generator it popped back up to 7.59 and started gathering faster (so it wasn't only the displayed number!)]
+
+those should also be averaged over maybe 1 second, such that if you are clicking fast the energy /s value will go up and hold a higher value and when you stop clicking it will return back down to just your generators
+
+the production bonus for reality collapses shown in that box are also not affecting the +x/s numbers? at least when mine unlocked and the +35% became visible I didn't see an increase in them.
+
+is there an EYE cursor that can be implemented for the keen observer effect when mousing over a non-harvestable plant? Or perhaps some other effect to go along with the +12% type of stuff graphic effects
+
+when the acheivment popup upper right side flashes up, can you make it so that if you mouse over it it doesn't go away until you move the mouse OFF of it? It will give the player some time to read them but only if they want to and point at it.
+
+still happens: 100->99 flicker timing just needs to be stretched a teeeny bit again. like if it's 300ms now make it 400... so maybe 25% longer than whatever it is.
+
+I feel like coherence production % could go lower than 60% for 0% coherence... maybe even as far as 30... that's anti-idler though. Perhaps this number could be upgrade-based over time as well
+
+most of the stats are not updating in realtime? autoharvested plants not counting toward harested, time played not going up, etc. // these fix only on refresh of page
+
+it is not clear that reality collapse also requires 1M total energy accumulated all time. The upgrade doesn't mention it and the whole reality collapse section under stats doesn't show up until you hit that 1M (no way to know? or is there?) 
+
+[update: refreshing the page with f5 brought all of the stats from zero to some values and unlocked the collapse button. Also, this refresh shows a whole bunch of purple narrative texts in the log all together for some reason]
+
+without refresh --- Now I'm on reality 4 and it isn't unlocking for me at all... It says I have no energy collected, no generators purchased.. I have generated up to 8 million quantum energy and the button never comes on? I'm pretty sure something is very broken in how all of this is being tracked after collapses, but I don't know how.
 
 
-3 x 3 , 4 x 4, etc., not always onscreen when playing on PC monitor that is wide. All plots should be onscreen no matter the width of the screen. The side bars should probably move inward to accommodate the shape, centered? 
+(polish) can you make the little black circle on the (h)arvest and (p)lant buttons glow up and glow-down like they are red LED lights in there? probably would take an opaque red circle fade in within the black circle and a fade-in of a slight glow around it? this would toggle along with the button turning green when you turn those features on.
+
+(polish) make a little progress bar for the autoharvest and autoplant buttons beneath them, like the plants have while they are growing - just a thin line attached to the buttons
+
+(polish) currently plants can be harvested that will give knowledge, etc., before you have unlocked that currency, and it shows the harvest numbers and icons in the floaty-numbers effect for the plot.
+
+
+
+
+upgrade idea: hoverclicker -- you only have to put the cursor over the button and it will autoclick at x/s so you can leave it there
+
+upgrade idea(s): - multiple upgrades to hoverclick -- double it, triple it, etc., seems safe up to like 1500 clicks/s, so could get powerful!
+
+upgrade(s) - normal click POWER currently peaks at 16.5 -- there's room here for some larger upgrades
+
+higher upgrade idea: - clicklock - tickbox radio button to lock the autoclicker on the button
+
+upgrade idea: +1 or more entanglements allowed per flower(!) so you can chain multiples to each other
+
+upgrade idea : some automated entangler that goes around connecting flowers for you randomly / prefers high time to low time pairings. This should have some kind of visual lead-up before the two click into entanglement, like a blurred fuzzy version of the chain between the two forming over 3-4 seconds and then POP they are connected. (a warning, kinda)
+
+
+(hard polish) - can you make it so when you click the first plant to entangle, the chain begins and stretches out toward the mouse cursor until you place it down on the second plant?
+
+(hard achievements/feature idea) - heheheh... patterns... constellations, even, using entanglements. shapes. some could require multiple-entanglement upgrade even? - X-shape, L, full vertical stripes, horizontal, diagonal, etc, square, triangle, T-shape, there could actually be so many of them that they could warrant their own collectible tab (catalog... sticker book... like the... fish in harvest moon games). This could be late-game heavy grind to find them all... with the feature not unlocking or being known until you make your first one so at least post-entanglement if you made 3 top to bottom full stripes or such it'd be like "cool that's a pattern called XYZ!" 
+
+
+
+---------------------- TimNotes Fixed or Implemented ---------------------------
+
+[x] had a quantum lily with 3x time crystals production --- it produces zero. So maybe limit mutations to plants that can benefit.
+
+[x] the log isn't showing the 2nd plant when harvesting a linked one -- seems to be giving the stuff, just not saying so in log
+
+[x] make those +X's also show up in the space within the garden plot, all at once with the harvesting / effect?
+
+[x] 3 x 3 , 4 x 4, etc., not always onscreen when playing on PC monitor that is wide. All plots should be onscreen no matter the width of the screen. The side bars should probably move inward to accommodate the shape, centered? 
+
+[x] (polish) resizing the window makes entanglement chains move off of the plants they are connected to, causing visual oddness
+
+[x] the buttons for buying plants on the right side are a little larger when highlighted, it seems? so the whole ui over there jiggles up a smidge when you buy them and back down again immediately if one refills (you have enough for 1)
+
+[x] the coherence bar now seems to fall reeeally slow from 99 -> 95ish... and accelerates. When I suggested easing I didn't mean for the whole of the bar's decay so much as just to prevent that 100->99 flicker part, which it is still doing!

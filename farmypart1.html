@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>One-Shot Farm Engine</title>
+    <style>
+        body { margin: 0; background: #222; overflow: hidden; font-family: 'Courier New', monospace; color: white; }
+        #game-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        canvas { background: #4ca456; image-rendering: pixelated; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 4px solid #3e2723; }
+        #ui-layer { position: absolute; top: 10px; left: 10px; pointer-events: none; text-shadow: 2px 2px 0 #000; }
+        .hud-box { background: rgba(0,0,0,0.7); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 2px solid #8d6e63; }
+        #toolbar { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .tool { width: 50px; height: 50px; background: rgba(0,0,0,0.5); border: 2px solid #fff; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; border-radius: 8px; transition: 0.1s; }
+        .tool.active { background: #ffca28; border-color: #ff6f00; transform: scale(1.1); color: black; }
+        #dialogue-box { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 600px; background: #fff; color: #000; padding: 15px; border: 4px double #000; display: none; border-radius: 4px; font-weight: bold;}
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+    
+    <div id="ui-layer">
+        <div class="hud-box">
+            <div id="clock">Day: 1 | 06:00 AM</div>
+            <div id="money">Gold: 0g</div>
+            <div id="energy">Stamina: 100/100</div>
+        </div>
+        <div class="hud-box">
+            <small>WASD: Move | Click: Action | Space: Interact/Sleep</small>
+        </div>
+    </div>
+
+    <div id="dialogue-box"></div>
+
+    <div id="toolbar">
+        <div class="tool active" id="tool-1">1<br>🪓</div>
+        <div class="tool" id="tool-2">2<br>⛏️</div>
+        <div class="tool" id="tool-3">3<br>🥔</div>
+        <div class="tool" id="tool-4">4<br>💧</div>
+        <div class="tool" id="tool-5">5<br>🧺</div>
+    </div>
+</div>
+
+<script>
+/**
+ * ONE-SHOT FARMING ENGINE
+ * 
+ * Features: Tile system, collision, farming cycle, tools, day/night, NPC skeleton.
+ */
+
+// --- CONFIGURATION ---
+const TILE_SIZE = 48;
+const VIEW_WIDTH = 20; // Tiles wide visible
+const VIEW_HEIGHT = 15; // Tiles high visible
+const MAP_WIDTH = 50;
+const MAP_HEIGHT = 50;
+const TICK_SPEED = 1000; // ms per game minute (lower is faster)
+
+// --- ASSETS (Emoji "Sprites") ---
+const SPRITES = {
+    player: '🧑‍🌾',
+    npc: '👵',
+    grass: '#4ca456',
+    soil: '#795548',
+    wet_soil: '#3e2723',
+    water: '#29b6f6',
+    rock: '🪨',
+    tree: '🌲',
+    stump: '🪵',
+    house: '🏠',
+    seed: '🌱',
+    plant_1: '🌿',
+    plant_2: '🌽', // Ready to harvest
+    debris: '🍂'
+};
+
+// --- GAME STATE ---
+const state = {
+    day: 1,
+    hour: 6,
+    minute: 0,
+    gold: 0,
+    stamina: 100,
+    selectedTool: 0, // 0: Axe, 1: Pick, 2: Seed, 3: Water, 4: Hand
+    dialogueActive: false,
+    map: [],
+    crops: {}, // key: "x,y", value: { stage, watered }
+    camera: { x: 0, y: 0 }
+};
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = VIEW_WIDTH * TILE_SIZE;
+canvas.height = VIEW_HEIGHT * TILE_SIZE;
+
+// --- INPUTS ---
+const keys = {};
+const mouse = { x: 0, y: 0, clicked: false };
+
+window.addEventListener('keydown', e => {
+    keys[e.key.toLowerCase()] = true;
+    if(e.key >= '1' && e.key <= '5') selectTool(parseInt(e.key) - 1);
+    if(e.code === 'Space') interact();
+});
+window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+});
+canvas.addEventListener('mousedown', () => handleClick());
+
+// --- ENTITIES ---
+class Entity {
+    constructor(x, y, sprite, solid = true) {
+        this.x = x;
+        this.y = y;
+        this.w = TILE_SIZE - 10;
+        this.h = TILE_SIZE - 10;
+        this.sprite = sprite;
+        this.solid = solid;
+        this.vx = 0;
+        this.vy = 0;
+        this.speed = 4;
+        this.facing = 'down';
+    }
+
+    update() {
+        // Basic Physics
+        let nextX = this.x + this.vx;
+        let nextY = this.y + this.vy;
+
+        if (!checkCollision(nextX, this.y, this)) this.x = nextX;
+        if (!checkCollision(this.x, nextY, this)) this.y = nextY;
+    }
+
+    draw(offsetX, offsetY) {
+        ctx.font = `${TILE_SIZE-5}px Arial`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        // Simple bobbing animation
+        const bob = Math.sin(Date.now() / 200) * 2;
+        ctx.fillText(this.sprite, this.x - offsetX + TILE_SIZE/2, this.y - offsetY + TILE_SIZE/2 + bob);
+        
+        // Debug box
+        // ctx.strokeStyle = "red";
+        // ctx.strokeRect(this.x - offsetX, this.y - offsetY, this.w, this.h);
+    }
+}
+
+class Player extends Entity {
+    constructor() {
+        super(10 * TILE_SIZE, 10 * TILE_SIZE, SPRITES.player);
+    }
+    
+    update() {
+        this.vx = 0;
+        this.vy = 0;
+        if (state.dialogueActive) return;
+
+        if (keys['w']) this.vy = -this.speed;
+        if (keys['s']) this.vy = this.speed;
+        if (keys['a']) this.vx = -this.speed;
+        if (keys['d']) this.vx = this.speed;
+        
+        super.update();
+        
+        // Camera follow
+        state.camera.x = this.x - (canvas.width / 2);
+        state.camera.y = this.y - (canvas.height / 2);
+        
+        // Clamp Camera
+        state.camera.x = Math.max(0, Math.min(state.camera.x, MAP_WIDTH * TILE_SIZE - canvas.width));
+        state.camera.y = Math.max(0, Math.min(state.camera.y, MAP_HEIGHT * TILE_SIZE - canvas.height));
+    }
+}
+
+class NPC extends Entity {
+    constructor(x, y, name, dialogue) {
+        super(x * TILE_SIZE, y * TILE_SIZE, SPRITES.npc);
+        this.name = name;
+        this.dialogue = dialogue;
+        this.timer = 0;
+    }
+
+    update() {
+        // Simple AI: Wander randomly
+        this.timer++;
+        if (this.timer > 100) {
+            const dir = Math.floor(Math.random() * 5);
+            this.vx = 0; this.vy = 0;
+            if (dir === 0) this.vx = 1;
+            if (dir === 1) this.vx = -1;
+            if (dir === 2) this.vy = 1;
+            if (dir === 3) this.vy = -1;
+            this.timer = 0;
+        }
+        super.update();
+    }
+}
+
+// --- MAP GENERATION ---
+const map = [];
+const entities = [];
+const player = new Player();
+entities.push(player);
+
+// Create NPC
+entities.push(new NPC(15, 12, "Granny", ["Oh hello dear!", "Looks like rain later.", "Have you seen my glasses?"]));
+
+function initMap() {
+    for (let y = 0; y < MAP_HEIGHT; y++) {
+        map[y] = [];
+        for (let x = 0; x < MAP_WIDTH; x++) {
+            // Procedural Logic
+            let tile = { type: 'grass', solid: false, object: null };
+            
+            // House Area
+            if (x > 8 && x < 13 && y > 8 && y < 13) {
+                // Clear area
+            } else if (Math.random() < 0.1) {
+                tile.object = 'rock';
+                tile.solid = true;
+            } else if (Math.random() < 0.15) {
+                tile.object = 'tree';
+                tile.solid = true;
+            } else if (Math.random() < 0.05) {
+                tile.object = 'debris'; // weeds
+            }
+
+            // Pond
+            if (x > 30 && x < 40 && y > 5 && y < 15) {
+                tile.type = 'water';
+                tile.solid = true;
+                tile.object = null;
+            }
+
+            map[y][x] = tile;
+        }
+    }
+    // Place House
+    map[9][10].object = 'house';
+    map[9][10].solid = true;
+}
+
+// --- CORE SYSTEMS ---
+
+function checkCollision(x, y, entity) {
+    // Boundary check
+    if (x < 0 || y < 0 || x + entity.w > MAP_WIDTH * TILE_SIZE || y + entity.h > MAP_HEIGHT * TILE_SIZE) return true;
+
+    // Tile check (corners)
+    const points = [
+        { cx: x, cy: y },
+        { cx: x + entity.w, cy: y },
+        { cx: x, cy: y + entity.h },
+        { cx: x + entity.w, cy: y + entity.h }
+    ];
+
+    for (let p of points) {
+        const tx = Math.floor(p.cx / TILE_SIZE);
+        const ty = Math.floor(p.cy / TILE_SIZE);
+        if (map[ty][tx].solid) return true;
+    }
+
+    return false;
+}
+
+function selectTool(index) {
+    state.selectedTool = index;
+    document.querySelectorAll('.tool').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+    });
+}
+
+function getTileAtMouse() {
+    const worldX = mouse.x + state.camera.x;
+    const worldY = mouse.y + state.camera.y;
+    const tx = Math.floor(worldX / TILE_SIZE);
+    const ty = Math.floor(worldY / TILE_SIZE);
+    return { x: tx, y: ty, tile: map[ty] ? map[ty][tx] : null };
+}
+
+function interact() {
+    if (state.dialogueActive) {
+        document.getElementById('dialogue-box').style.display = 'none';
+        state.dialogueActive = false;
+        return;
+    }
+
+    // Check distance to entities
+    const px = player.x + TILE_SIZE/2;
+    const py = player.y + TILE_SIZE/2;
+
+    // NPC Interaction
+    for (let e of entities) {
+        if (e instanceof NPC) {
+            const dist = Math.hypot((e.x + TILE_SIZE/2) - px, (e.y + TILE_SIZE/2) - py);
+            if (dist < TILE_SIZE * 1.5) {
+                showDialogue(e.name, e.dialogue[Math.floor(Math.random() * e.dialogue.length)]);
+                return;
+            }
+        }
+    }
+
+    // House/Sleep Interaction
+    const houseDist = Math.hypot((10 * TILE_SIZE) - px, (9 * TILE_SIZE) - py);
+    if (houseDist < TILE_SIZE * 2) {
+        sleep();
+    }
+}
+
+function handleClick() {
+    if (state.stamina <= 0) {
+        showDialogue("System", "Too tired!");
+        return;
+    }
+
+    const { x, y, tile } = getTileAtMouse();
+    if (!tile) return;
+
+    // Distance check (can't reach across map)
+    const dist = Math.hypot((x * TILE_SIZE) - player.x, (y * TILE_SIZE) - player.y);
+    if (dist > TILE_SIZE * 3) return;
+
+    let actionTaken = false;
+    const key = `${x},${y}`;
+
+    // Tool Logic
+    switch(state.selectedTool) {
+        case 0: // Axe
+            if (tile.object === 'tree') {
+                tile.object = 'stump';
+                state.stamina -= 5;
+                actionTaken = true;
+            } else if (tile.object === 'stump') {
+                tile.object = null;
+                tile.solid = false;
+                state.stamina -= 5;
+                actionTaken = true;
+                spawnFloatText(x, y, "+2 Wood");
+            }
+            break;
+        case 1: // Pickaxe
+            if (tile.object === 'rock') {
+                tile.object = null;
+                tile.solid = false;
+                state.stamina -= 5;
+                actionTaken = true;
+                spawnFloatText(x, y, "+1 Stone");
+            } else if (tile.type === 'soil' || tile.type === 'wet_soil') {
+                // Untill soil
+                if (!state.crops[key]) {
+                    tile.type = 'grass';
+                    state.stamina -= 2;
+                    actionTaken = true;
+                }
+            }
+            break;
+        case 2: // Seeds
+            if ((tile.type === 'soil' || tile.type === 'wet_soil') && !tile.object && !state.crops[key]) {
+                state.crops[key] = { stage: 1, watered: tile.type === 'wet_soil' };
+                state.stamina -= 2;
+                actionTaken = true;
+            }
+            break;
+        case 3: // Water
+            if (tile.type === 'soil') {
+                tile.type = 'wet_soil';
+                if(state.crops[key]) state.crops[key].watered = true;
+                state.stamina -= 2;
+                actionTaken = true;
+            }
+            break;
+        case 4: // Hand (Harvest)
+            if (state.crops[key] && state.crops[key].stage === 3) {
+                // Harvest!
+                delete state.crops[key];
+                state.gold += 50;
+                spawnFloatText(x, y, "+50g");
+                actionTaken = true;
+            } else if (tile.object === 'debris') {
+                tile.object = null;
+                actionTaken = true;
+            }
+            break;
+    }
+
+    if (actionTaken) updateUI();
+}
+
+function sleep() {
+    state.day++;
+    state.hour = 6;
+    state.minute = 0;
+    state.stamina = 100;
+    
+    // Grow Crops
+    for (let key in state.crops) {
+        const crop = state.crops[key];
+        const [cx, cy] = key.split(',').map(Number);
+        
+        // Logic: Must be watered to grow
+        if (crop.watered) {
+            crop.stage = Math.min(3, crop.stage + 1);
+            crop.watered = false; // Dry out
+        }
+        
+        // Dry out soil
+        if (map[cy][cx].type === 'wet_soil') {
+            map[cy][cx].type = 'soil';
+        }
+    }
+
+    spawnFloatText(player.x/TILE_SIZE, player.y/TILE_SIZE, "Saved & Slept!");
+    updateUI();
+}
+
+// --- UI & RENDER ---
+
+function showDialogue(speaker, text) {
+    const box = document.getElementById('dialogue-box');
+    box.innerHTML = `<strong>${speaker}:</strong> ${text}<br><small>(Space to close)</small>`;
+    box.style.display = 'block';
+    state.dialogueActive = true;
+}
+
+const floatTexts = [];
+function spawnFloatText(tx, ty, text) {
+    floatTexts.push({ x: tx * TILE_SIZE, y: ty * TILE_SIZE, text: text, life: 60 });
+}
+
+function updateUI() {
+    const timeStr = `${state.hour.toString().padStart(2,'0')}:${state.minute.toString().padStart(2,'0')}`;
+    document.getElementById('clock').innerText = `Day: ${state.day} | ${timeStr}`;
+    document.getElementById('money').innerText = `Gold: ${state.gold}g`;
+    document.getElementById('energy').innerText = `Stamina: ${state.stamina}/100`;
+}
+
+// --- GAME LOOP ---
+let lastTime = 0;
+let timeAccumulator = 0;
+
+function drawMap() {
+    // Calculate visible range
+    const startCol = Math.floor(state.camera.x / TILE_SIZE);
+    const endCol = startCol + (canvas.width / TILE_SIZE) + 1;
+    const startRow = Math.floor(state.camera.y / TILE_SIZE);
+    const endRow = startRow + (canvas.height / TILE_SIZE) + 1;
+
+    for (let y = startRow; y <= endRow; y++) {
+        for (let x = startCol; x <= endCol; x++) {
+            if (y < 0 || y >= MAP_HEIGHT || x < 0 || x >= MAP_WIDTH) continue;
+            
+            const tile = map[y][x];
+            const drawX = (x * TILE_SIZE) - state.camera.x;
+            const drawY = (y * TILE_SIZE) - state.camera.y;
+
+            // Ground
+            ctx.fillStyle = tile.type === 'wet_soil' ? SPRITES.wet_soil : 
+                            tile.type === 'soil' ? SPRITES.soil : 
+                            tile.type === 'water' ? SPRITES.water : SPRITES.grass;
+            ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+            
+            // Grid lines (subtle)
+            ctx.strokeStyle = "rgba(0,0,0,0.1)";
+            ctx.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+
+            // Objects
+            ctx.font = `${TILE_SIZE-8}px Arial`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            const cx = drawX + TILE_SIZE/2;
+            const cy = drawY + TILE_SIZE/2;
+
+            if (tile.object) {
+                ctx.fillText(SPRITES[tile.object], cx, cy);
+            }
+
+            // Crops
+            const key = `${x},${y}`;
+            if (state.crops[key]) {
+                const stage = state.crops[key].stage;
+                let sprite = SPRITES.seed;
+                if (stage === 2) sprite = SPRITES.plant_1;
+                if (stage === 3) sprite = SPRITES.plant_2;
+                ctx.fillText(sprite, cx, cy);
+            }
+
+            // Mouse Highlight
+            const mTile = getTileAtMouse();
+            if (mTile.x === x && mTile.y === y) {
+                ctx.strokeStyle = "yellow";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                ctx.lineWidth = 1;
+            }
+        }
+    }
+}
+
+function gameLoop(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    const dt = timestamp - lastTime;
+    lastTime = timestamp;
+
+    // Time System
+    if (!state.dialogueActive) {
+        timeAccumulator += dt;
+        if (timeAccumulator > 200) { // Fast time for demo
+            timeAccumulator = 0;
+            state.minute += 10;
+            if (state.minute >= 60) {
+                state.minute = 0;
+                state.hour++;
+                if (state.hour >= 24) state.hour = 0;
+            }
+            updateUI();
+        }
+    }
+
+    // Update
+    entities.forEach(e => e.update());
+
+    // Draw
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    drawMap();
+    
+    entities.forEach(e => e.draw(state.camera.x, state.camera.y));
+
+    // Draw Floating Text
+    

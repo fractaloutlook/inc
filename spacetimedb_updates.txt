@@ -1,0 +1,392 @@
+v1.7.0 - New CLI Command - spacetime dev
+We are continuing the month of shipping with a new CLI command for you all, spacetime dev. 
+
+spacetime dev automates your development loop to make developing with SpacetimeDB much faster and easier. It does the following:
+
+Generates types for your client (spacetime generate)
+Builds your application (spacetime build)
+Publishes your module (spacetime publish)
+Subscribes to your module logs (spacetime logs)
+Watches your module files for changes and repeats the process
+
+spacetime dev is 5 commands in one and it's a real game changer once you try it!
+
+With the introduction of spacetime dev we're also introducing a canonical default project structure:
+
+my-spacetimedb-project/
+├── package.json
+├── tsconfig.json
+├── src/                     # regular client app code
+│   ├── main.ts
+│   ├── App.tsx
+│   └── components/
+│
+└── spacetimedb/             # SpacetimeDB module lives here
+    ├── package.json         # its own TypeScript package
+    ├── tsconfig.json
+    └── src/
+        ├── index.ts         # entrypoint for the module
+        └── schema.ts         # schema / logic
+
+
+With this structure, you can just include a spacetimedb folder inside your client project and have spacetime dev automatically publish your modules for you while you're developing. This makes it super easy to develop apps with a single server and client.
+
+Although convenient, this default project structure is not mandatory and can be customized and configured for more complex multi-client applications or in situations where you want to separate your client and server into different repositories.
+
+Usage
+If you run spacetime dev in a directory without a spacetimedb directory (and do not specify a module-project-path), spacetime dev will take you through the process of setting up a new project.
+
+$ spacetime dev
+No SpacetimeDB project found in current directory.
+Would you like to initialize a new project? yes
+WARNING: This command is UNSTABLE and subject to breaking changes.
+
+✔ Project name · my-spacetime-app
+✔ Project path · ./my-spacetime-app
+? Select a client type for your project (you can add other clients later) ›
+❯ React - React web app with TypeScript server
+  Use Template - Choose from a list of built-in template projects or clone an existing SpacetimeDB project from GitHub
+  None
+
+
+If you run spacetime dev in a directory with an existing spacetimedb directory (or specify a module-project-path), spacetime dev will ask you to publish a new module or connect to an existing one.
+
+$ spacetime dev
+Found existing SpacetimeDB project.
+Now we need to select a database to publish to.
+
+Selected database: grumpy-lunchroom-2109
+Tip: Use `--database grumpy-lunchroom-2109` to skip this question next time
+
+Starting development mode...
+Database: grumpy-lunchroom-2109
+Watching for changes in: /Users/tylercloutier/Developer/SpacetimeDB/my-spacetime-app/spacetimedb
+Press Ctrl+C to stop
+
+Updating .env.local with database name grumpy-lunchroom-2109...
+Building...
+Build complete!
+Generating module bindings...
+Generate finished successfully.
+Publishing...
+Build finished successfully.
+Uploading to local => http://127.0.0.1:3000
+Checking for breaking changes...
+Publishing module...
+JavaScript / TypeScript support is currently in BETA.
+There may be bugs. Please file issues if you encounter any.
+<https://github.com/clockworklabs/SpacetimeDB/issues/new>
+Created new database with name: grumpy-lunchroom-2109, identity: c20008053ab940eb968e981c506037220be5dba2a948f8f7e7a131ba156bf28f
+Published successfully!
+---
+Watching for file changes...
+2025-10-30T23:19:12.862606Z  INFO: Creating table `person`
+2025-10-30T23:19:12.863539Z  INFO: Database initialized
+
+
+In either case, spacetime dev will watch for changes in your module files, update your client generated code, build your module, and publish it automatically! 
+Updated spacetime init
+The spacetime init subcommand has been completely reworked. There are a few major changes here:
+
+You now specify a project name when creating a project
+There is a new interactive mode for selecting project templates (see below)
+
+SpacetimeDB Project Templates
+A Template is a pre-made project configuration that you can quickly deploy via spacetime init. Now when you run spacetime init you'll see all of the built-in options ready to deploy immediately:
+
+You are logged in to SpacetimeDB.
+✔ Project name · my-spacetime-app
+✔ Project path · ./my-spacetime-app
+✔ Select a client type for your project (you can add other clients later) · Use Template - Choose from a list of built-in template projects or clone an existing SpacetimeDB project from GitHub
+
+Available built-in templates:
+  basic-typescript - A basic TypeScript client and server template with only stubs for code
+  basic-c-sharp - A basic C# client and server template with only stubs for code
+  basic-rust - A basic Rust client and server template with only stubs for code
+  basic-react - React web app with TypeScript server
+  quickstart-chat-rust - Rust server/client implementing quickstart chat
+  quickstart-chat-c-sharp - C# server/client implementing quickstart chat
+  quickstart-chat-typescript - TypeScript server/client implementing quickstart chat
+
+? Template ID or GitHub repository (owner/repo) or git URL ›
+
+
+As you can see you can also specify a Github URL here to deploy a custom template. This allows the community to build and share their own templates to be used by others.
+
+Auth claims in modules
+Client credentials are now exposed to your module code, so you can have more control over your authorization logic. For some examples of how to use it to secure your app, check out the docs.
+
+Other changes
+Docusaurus Migration
+We recently migrated all of our documentation to docusaurus! You can view the newly updated documentation here: https://spacetimedb.com/docs .
+
+Postgres Wire Protocol on Maincloud
+The big update here is that we have re-enabled postgres wire protocol on Maincloud! You can see the full release notes for our Postgres Wire Protocol release here: https://github.com/clockworklabs/SpacetimeDB/releases/tag/v1.5.0 .
+
+Default Server
+The default server for newly installed CLI tools has been changed from local to maincloud. This only affects new users as existing users will already have a default server set in their spacetime CLI config.toml.
+@Announcement Notifications new release! Check out the full release notes on GitHub!
+GitHub
+Release Release v1.7.0 - `spacetime dev` · clockworklabs/SpacetimeDB
+New CLI Command - spacetime dev
+We are continuing the month of shipping with a new CLI command for you all, spacetime dev.
+spacetime dev automates your development loop to make developing with Spac...
+Release Release v1.7.0 - `spacetime dev` · clockworklabs/SpacetimeDB
+⚙ 3Blave
+
+ — 11/5/25, 9:31 AM
+Known issues: Due to a bug with our TypeScript SDK, the actual sample React app has issues. We are working on fixing these!
+⚙ 3Blave
+
+ — 11/12/25, 9:57 AM
+v1.8.0 - Module Defined Views
+The shipping continues! This time we have Module Defined Views or just "views". Views are a simple, but incredibly expressive way to define custom and intricate read permissioning for your tables.
+
+Views, which are inspired by a similar concept from SQL, are virtual tables that are defined by new "view functions" in your module and derived from other tables or parameters.
+
+Views are defined by read-only procedural, functions in the language of your module. This function returns data derived from your database tables. You can then query and subscribe to this view as you would any normal database table and it will be updated automatically in realtime.
+
+Here's a look at the syntax for defining a view in the various module languages:
+
+Rust
+Declare with #[view]. First argument is a view context (&ViewContext or &AnonymousViewContext). Return Option<T> (0–1 row) or Vec<T> (many rows).
+
+#[view(name = my_player, public)]
+fn my_player(ctx: &ViewContext) -> Option<Player> {
+    ctx.db.player().identity().find(ctx.sender)
+}
+
+#[view(name = players_for_level, public)]
+fn players_for_level(ctx: &AnonymousViewContext) -> Vec<Player> {
+    ctx.db
+        .player_level()
+        .level()
+        .filter(2u64) // players for level 2
+        .map(|player| {
+            ctx.db
+                .player()
+                .id()
+                .find(player.player_id)
+        })
+        .collect()
+}
+
+
+Notes
+
+A name is required.
+Only the context parameter is allowed; no extra args (yet).
+The context provides a read-only view of the database
+Mutations are not allowed
+Full table scans are not allowed
+
+---
+
+C Sharp
+Use [SpacetimeDB.View] with ViewContext or AnonymousViewContext. Return a single row as T? or many rows as List<T> / T[].
+
+[SpacetimeDB.View(Name = "my_player", Public = true)]
+public static Player? MyPlayer(ViewContext ctx) =>
+    ctx.Db.Player.Identity.Find(ctx.Sender) as Player;
+
+[SpacetimeDB.View(Name = "players_for_level", Public = true)]
+public static List<Player> PlayerLocations(AnonymousViewContext ctx) {
+    var rows = new List<Player>();
+    foreach (var player in ctx.Db.PlayerLevel.Level.Filter(2))
+    {
+        if (ctx.Db.Player.Id.Find(player.PlayerId) is Player p)
+        {
+            rows.Add(p);
+        }
+    }
+    return rows;
+}
+
+
+---
+
+TypeScript
+Register with schema.view(...) or schema.anonymousView(...). Use t.option(row) for 0–1 row or t.array(row) for many rows.
+
+spacetimedb.view(
+  { name: 'my_player', public: true },
+  t.option(players.row()),
+  (ctx) => {
+  return ctx.db.players.identity.find(ctx.sender) ?? null;
+  }
+);
+
+spacetimedb.anonymousView(
+  { name: 'players_for_level', public: true },
+  t.option(players.row()),
+  (ctx) => {
+    const out = [];
+    for (const pl of ctx.db.playerLevels.level.find(2)) {
+      const p = ctx.db.players.id.find(pl.player_id);
+      if (p) out.push(p);
+    }
+    return out;
+  }
+);
+
+
+Row-level security rules
+Currently procedurally defined view functions are limited to index probing tables so that we can efficiently compute the real-time delta for procedural functions. However, we also plan to shortly add the ability to return typed queries from view functions which will allow you to define performant, incrementally evaluated queries which execute full tables scans.
+
+This functionality will make views strictly more expressive and powerful than the existing unstable RLS (row-level security) rules API that we introduced earlier this year. As such we will be deprecating the RLS API in favor of the view API. Here is an idea (not final API) of what that might look like in TypeScript
+
+spacetimedb.view(
+  { name: 'high_level_players', public: true },
+  t.query(players.row()),
+  (ctx) => {
+  return ctx.from(ctx.db.player).where(player => gt(player.level, 50))
+  }
+);
+ 
+@Announcement Notifications check out the full release notes! https://github.com/clockworklabs/SpacetimeDB/releases/tag/v1.8.0
+GitHub
+Release Release v1.8.0 - Module Defined Views · clockworklabs/Spac...
+Module Defined Views
+The shipping continues! This time we have Module Defined Views or just &quot;views&quot;. Views are a simple, but incredibly expressive way to define custom and intricate read ...
+Release Release v1.8.0 - Module Defined Views · clockworklabs/Spac...
+⚙ 3Blave
+
+ — 11/21/25, 3:42 PM
+v1.9.0 - Project Collaborators
+Today we have a long overdue feature we're releasing, project collaborators! 👯
+ 
+
+Project Collaborators
+Now you can invite other members of your team to join your projects that you deploy to Maincloud.
+
+In order to add collaborators, navigate to your project on the website and go to Settings > Collaborators, and then press Add People to add a new collaborator to your project. 
+
+Depending on the role you assign the user, they will be able to perform actions that were previously only possible for the database owner to run, including updating the module, viewing logs, and editing tables.
+
+TypeScript (Beta) - API Update
+We also have the first major update to our TypeScript API. This change dramatically improves usability in a few key areas and fixes some critical bugs in the TypeScript and React SDKs.
+
+[!IMPORTANT]
+This update also comes with a few breaking changes to the TypeScript API, which are detailed below. In general, we will try to minimize the number of changes to the existing API, but while TypeScript is in Beta we will be making a few important changes until we stabilize the API completely.
+
+TypeScript Modules
+TypeScript modules only get a modest change from the previous API:
+
+Table accessor names and index accessor names are converted to camelCase on the ctx, so if your table name is foo_bar, the accessor changes from ctx.db.foo_bar to ctx.db.fooBar. This allows you to use whatever table name you want for your tables without running afoul of TypeScript linters.
+Infer<> now also does InferTypeOfRow<> if applicable which means you can forget about InferTypeOfRow and just use Infer in all cases to get the type of a type builder.
+
+TypeScript SDK
+The TypeScript SDK has now been unified with the API of server modules. Code generation now uses the same types and functions that you use on the server. The eventual goals is to allow you to use your actual server types in your TypeScript client without needing to do any code generation. This leads to the following changes:
+
+All types exported by generated files are now TypeBuilders, meaning that if you were previously using a type from a generated file, you will now have to do const x: Infer<typeof MyType> instead of const x: MyType. This may seem like an inconvenience, but it vastly improves a lot of the other APIs and is very flexible to extend and is inspired by the very powerful Zod library.
+We no longer generate and export MyTypeVariants for sum types (these are now accessed by Infer<typeof MyType.variants.myVariant>)
+Your module_bindings now export a tables object with references to all the TableDefs
+Your module_bindings now export a reducers object with references to all the ReducerDefs
+On the client my_table.iter() now returns IterableIterator instead of an Array
+MyType.getTypeScriptAlgebraicType() has been replaced with MyType.algebraicType
+Reducers are now called with the same format on the server and clients. e.g. ctx.reducers.createPlayer(argA, argB) -> ctx.reducers.createPlayer({ argA, argB })
+Reducer callbacks now also take arguments the same way: ctx.reducers.onCreatePlayer(ctx, argA, argB) -> ctx.reducers.onCreatePlayer(ctx, { argA, argB }) & ctx.reducers.removeOnCreatePlayer(ctx, argA, argB) -> ctx.reducers.removeOnCreatePlayer(ctx, { argA, argB })
+count() now returns a bigint instead of a number to match the server API e.g. myTable.count(): number -> myTable.count(): bigint. This may be changed in the future as it is unlikely that you will have a table with more than 2^53 rows.
+ 
+Notable things that did not change:
+MyType.serialize(writer: BinaryWriter, value: Infer<typeof MyType>) and MyType.deserialize(reader: BinaryReader): Infer<typeof MyType> are still supported exactly as before.
+The MyType.MyVariant(...) constructor function on sum types is still present, but implemented with the private MyType.create('MyVariant', ...). We could choose to move away from this API later if we didn't like the variants polluting the namespace
+
+[!WARNING]
+You will need to regenerate your module bindings for your TypeScript clients with the latest version of the spacetime CLI tool.
+
+React SDK
+The React SDK gets a major improvement in both usability and correctness.
+
+useSpacetimeDB() no longer takes type parameters
+useSpacetimeDB() now returns a ConnectionState. All fields on the ConnectionState are not React state and will cause a rerender any time they change
+useTable() now takes a TableDef parameter and type params are inferred
+useTable() now just returns a tuple with the first element being an Array instead of a object with { rows }
+Added a useReducer() React hook
+
+So now you can write this in your React client:
+
+  import { reducers, tables } from "./module_bindings";
+
+  const { identity, isActive: connected } = useSpacetimeDB();
+  const setName = useReducer(reducers.setName);
+  const sendMessage = useReducer(reducers.sendMessage);
+  const [onlineUsers] = useTable(tables.user, where(eq('online', true)));
+
+
+The API for using a view is the same as using a table:
+
+  const [myViewRows] = useTable(tables.myView);
+@Announcement Notifications check out the full release notes! https://github.com/clockworklabs/SpacetimeDB/releases/tag/v1.9.0
+GitHub
+Release Release v1.9.0 - Project Collaborators · clockworklabs/Spa...
+Today we have a long overdue feature we&#39;re releasing, project collaborators! 👯
+Project Collaborators
+Now you can invite other members of your team to join your projects that you deploy to Mainc...
+Release Release v1.9.0 - Project Collaborators · clockworklabs/Spa...
+Image
+⚙ 3Blave
+
+ — 11/26/25, 10:43 PM
+Release v1.10.0 - Procedures and HTTP Requests
+Today we have an absolute game changer for SpacetimeDB. SpacetimeDB 1.10 introduces the ability for databases to perform HTTP requests to external services right from within your module! This is one of our most-requested features, and we're very excited to share it with you all.
+
+SpacetimeDB Reducers are extremely powerful. They are atomic, transactional, pure, retryable, and replayable. The challenge was: in order to maintain these properties and guarantees, they need to be isolated from the outside world and can't be allowed to cause any observable side effects.
+
+However, HTTP requests are inherently side-effecting, and are too useful not to have. It turns out the solution is pretty simple: keep reducers side effect free, and introduce a new kind of database function with weaker guarantees and more powers. Enter a new type of SpacetimeDB function: Procedures.
+
+Examples
+Just like a reducer, a procedure is a function defined in your module which runs inside the database. Unlike a reducer, procedures don't correspond 1-to-1 with transactions. Instead, you explicitly manage transactions inside the body of your procedure:
+
+#[spacetimedb::procedure]
+fn find_highest_level_player(ctx: &mut ProcedureContext) {
+    let highest_level_player = ctx.with_tx(|ctx| {
+        ctx.db.player().iter().max_by_key(|player| player.level)
+    });
+    match highest_level_player {
+        Some(player) => log::info!("Congratulations to {}", player.id),
+        None => log::warn!("No players..."),
+    }
+}
+
+
+Being able to run code in the database without a transaction open opens a lot of possibilities for new APIs we could expose. The first of these, releasing today, is HTTP requests:
+
+#[spacetimedb::procedure]
+fn get_request(ctx: &mut ProcedureContext) {
+    match ctx.http.get("https://example.invalid") {
+        Ok(response) => {
+            let (response, body) = response.into_parts();
+            log::info!(
+                "Got response with status {} and body {}",
+                response.status,
+                body.into_string_lossy(),
+            )
+        },
+        Err(error) => log::error!("Request failed: {error:?}"),
+    }
+}
+
+
+Take a look at the documentation on the new procedure APIs for more details!
+
+As of this release, only Rust and TypeScript modules can define procedures. We're hard at work adding support to C# modules, and will be releasing them soon. We'll also be cleaning up the new APIs in response to your feedback, so for now procedures are unstable and subject to breaking changes.
+TypeScript fixes
+In this release, we've also fixed quite a few issues which were reported in the new TypeScript SDK.
+
+This issue by exporting the SubscriptionHandle type with the REMOTE_MODULE type applied.
+This issue by converting to camelCase for column names in code generation.
+Fixes an issue where onMyReducer callbacks were passing arguments as variadic params, while the types indicated they would be passed as an object. onMyReducer((ctx, argA, argB, argC) => {}) vs onMyReducer((ctx, { argA, argB, argC}) => {})`
+Fixes an issue where the table type name was used instead of the table name in code generation for constructing tables.
+Fixes issue with ScheduleAt being used in non-table types.
+Fixes issue where template projects do not use the correct lifecycle reducer setup
+Fixes an issue where .insert() returns incorrect objects
+Fixes an issue where .update() causes error with .autoInc() field
+
+We intend for TypeScript modules and clients to rapidly approach stability. The most invasive breaking changes have already been made.
+@Announcement Notifications Check out the full release notes! https://github.com/clockworklabs/SpacetimeDB/releases/tag/v1.10.0
+GitHub
+Release Release v1.10.0 - Procedures and HTTP Requests · clockwork...
+Today we have an absolute game changer for SpacetimeDB. SpacetimeDB 1.10 introduces the ability for databases to perform HTTP requests to external services right from within your module! This is on...
+Today we have an absolute game changer for SpacetimeDB. SpacetimeDB 1.10 introduces the ability for databases to perform HTTP requests to external services right from within your module! This is on...
+(Yes we know the docs link doesn't work right now, we're going to fix that.)

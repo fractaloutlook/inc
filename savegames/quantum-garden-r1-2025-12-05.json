@@ -1,0 +1,564 @@
+{
+  "resources": {
+    "energy": {
+      "amount": 12789132.111558512,
+      "total": 395958359.1127083,
+      "rate": 8847.24575319334
+    },
+    "seeds": {
+      "amount": 291,
+      "total": 13965,
+      "rate": 0,
+      "unlocked": true
+    },
+    "time": {
+      "amount": 309963.93006670923,
+      "total": 2913471.930066771,
+      "rate": 67.87862765823516
+    },
+    "knowledge": {
+      "amount": 13108.703242940817,
+      "total": 322180.7032429235,
+      "rate": 8.015817839037823
+    },
+    "coherence": {
+      "amount": 92.49945692397537,
+      "total": 154.32569882145657,
+      "rate": 0
+    },
+    "entanglement": {
+      "amount": 117940.67139802646,
+      "total": 118141.67139802643,
+      "rate": 3.0698876830357618
+    },
+    "fragments": {
+      "amount": 4,
+      "total": 4,
+      "rate": 0
+    },
+    "timeCrystals": {
+      "amount": 30,
+      "total": 30
+    }
+  },
+  "generators": {
+    "quantumLily": {
+      "owned": 102
+    },
+    "timeTulip": {
+      "owned": 19
+    },
+    "energyRose": {
+      "owned": 26
+    },
+    "dimensionDaisy": {
+      "owned": 47
+    },
+    "voidViolet": {
+      "owned": 36
+    }
+  },
+  "upgrades": {
+    "fragmentBoost1": {
+      "purchased": true
+    },
+    "fragmentBoost2": {
+      "purchased": true
+    },
+    "efficientClicking": {
+      "purchased": true
+    },
+    "improvedClicking": {
+      "purchased": true
+    },
+    "quantumClicking": {
+      "purchased": true
+    },
+    "seedProduction": {
+      "purchased": true
+    },
+    "largerGarden": {
+      "purchased": true
+    },
+    "fasterGrowth": {
+      "purchased": true
+    },
+    "quantumLilyBoost": {
+      "purchased": true
+    },
+    "timeTulipBoost": {
+      "purchased": true
+    },
+    "unlockTime": {
+      "purchased": true
+    },
+    "keenObserver": {
+      "purchased": true
+    },
+    "superpositionMastery": {
+      "purchased": true
+    },
+    "coherenceStabilizer": {
+      "purchased": true
+    },
+    "entanglementBasics": {
+      "purchased": true
+    },
+    "deepEntanglement": {
+      "purchased": true
+    },
+    "autoHarvest": {
+      "purchased": true
+    },
+    "autoPlant": {
+      "purchased": true
+    },
+    "quantumResonance": {
+      "purchased": true
+    },
+    "largerGarden2": {
+      "purchased": true
+    },
+    "largerGarden3": {
+      "purchased": true
+    },
+    "realityAwareness": {
+      "purchased": true
+    },
+    "fragmentBoost3": {
+      "purchased": false
+    }
+  },
+  "achievements": {
+    "firstClick": true,
+    "click100": true,
+    "click1000": true,
+    "energy100": true,
+    "energy10k": true,
+    "energy1m": true,
+    "firstHarvest": true,
+    "harvest10": true,
+    "harvest100": true,
+    "fullGarden": true,
+    "firstGenerator": true,
+    "tenLilies": true,
+    "allGenerators": true,
+    "firstEvent": true,
+    "tenEvents": true,
+    "lowCoherence": true,
+    "speedrunner": true,
+    "patient": true,
+    "nightOwl": true,
+    "coherenceMaster": true,
+    "zeroCoherence": true,
+    "firstBurst": true,
+    "tenBursts": true,
+    "firstEntangle": true,
+    "entangleFive": true,
+    "clickerReborn": true,
+    "energy100m": true,
+    "harvest1000": true,
+    "firstMutation": true,
+    "mutationCollector": true,
+    "firstCollapse": true,
+    "realityVeteran": false,
+    "fragmentHoarder": false,
+    "speedCollapse": false,
+    "mutationMaster": true,
+    "luckyWinner": false,
+    "storySeeker": true
+  },
+  "garden": {
+    "size": 36,
+    "plots": [
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "quantumLily",
+        "progress": 0.41087499999999916,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "quantumLily",
+        "mutation": null
+      },
+      {
+        "plant": "timeTulip",
+        "progress": 1,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "timeTulip",
+        "mutation": null
+      },
+      {
+        "plant": "timeTulip",
+        "progress": 1,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "timeTulip",
+        "mutation": null
+      },
+      {
+        "plant": "timeTulip",
+        "progress": 1,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "timeTulip",
+        "mutation": null
+      },
+      {
+        "plant": "timeTulip",
+        "progress": 0.13695833333333357,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "timeTulip",
+        "mutation": null
+      },
+      {
+        "plant": "timeTulip",
+        "progress": 0.13695833333333357,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "timeTulip",
+        "mutation": null
+      },
+      {
+        "plant": "timeTulip",
+        "progress": 0.13695833333333357,
+        "plantedAt": 1764934739489,
+        "entangledWith": null,
+        "autoPlantType": "timeTulip",
+        "mutation": null
+      },
+      {
+        "plant": "energyRose",
+        "progress": 0.5904374999999938,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "energyRose",
+        "mutation": null
+      },
+      {
+        "plant": "energyRose",
+        "progress": 0.5904374999999938,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "energyRose",
+        "mutation": null
+      },
+      {
+        "plant": "energyRose",
+        "progress": 0.5904374999999938,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "energyRose",
+        "mutation": "golden"
+      },
+      {
+        "plant": "energyRose",
+        "progress": 0.5904374999999938,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "energyRose",
+        "mutation": null
+      },
+      {
+        "plant": "energyRose",
+        "progress": 0.5904374999999938,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "energyRose",
+        "mutation": null
+      },
+      {
+        "plant": "energyRose",
+        "progress": 0.5904374999999938,
+        "plantedAt": 1764934714435,
+        "entangledWith": null,
+        "autoPlantType": "energyRose",
+        "mutation": null
+      },
+      {
+        "plant": "dimensionDaisy",
+        "progress": 0.7798229166666422,
+        "plantedAt": 1764934687114,
+        "entangledWith": null,
+        "autoPlantType": "dimensionDaisy",
+        "mutation": null
+      },
+      {
+        "plant": "dimensionDaisy",
+        "progress": 0.7798229166666422,
+        "plantedAt": 1764934687114,
+        "entangledWith": null,
+        "autoPlantType": "dimensionDaisy",
+        "mutation": "echoing"
+      },
+      {
+        "plant": "dimensionDaisy",
+        "progress": 0.7798229166666422,
+        "plantedAt": 1764934687114,
+        "entangledWith": null,
+        "autoPlantType": "dimensionDaisy",
+        "mutation": "void"
+      },
+      {
+        "plant": "dimensionDaisy",
+        "progress": 0.7798229166666422,
+        "plantedAt": 1764934687114,
+        "entangledWith": null,
+        "autoPlantType": "dimensionDaisy",
+        "mutation": null
+      },
+      {
+        "plant": "dimensionDaisy",
+        "progress": 0.7798229166666422,
+        "plantedAt": 1764934687114,
+        "entangledWith": null,
+        "autoPlantType": "dimensionDaisy",
+        "mutation": null
+      },
+      {
+        "plant": "dimensionDaisy",
+        "progress": 0.7798229166666422,
+        "plantedAt": 1764934687114,
+        "entangledWith": null,
+        "autoPlantType": "dimensionDaisy",
+        "mutation": "temporal"
+      },
+      {
+        "plant": "voidViolet",
+        "progress": 0.17500416666666577,
+        "plantedAt": 1764934700776,
+        "entangledWith": null,
+        "autoPlantType": "voidViolet",
+        "mutation": null
+      },
+      {
+        "plant": "voidViolet",
+        "progress": 0.17500416666666577,
+        "plantedAt": 1764934700776,
+        "entangledWith": null,
+        "autoPlantType": "voidViolet",
+        "mutation": null
+      },
+      {
+        "plant": "voidViolet",
+        "progress": 0.17500416666666577,
+        "plantedAt": 1764934700776,
+        "entangledWith": null,
+        "autoPlantType": "voidViolet",
+        "mutation": null
+      },
+      {
+        "plant": "voidViolet",
+        "progress": 0.17500416666666577,
+        "plantedAt": 1764934700776,
+        "entangledWith": null,
+        "autoPlantType": "voidViolet",
+        "mutation": null
+      },
+      {
+        "plant": "voidViolet",
+        "progress": 0.17500416666666577,
+        "plantedAt": 1764934700776,
+        "entangledWith": null,
+        "autoPlantType": "voidViolet",
+        "mutation": null
+      },
+      {
+        "plant": "voidViolet",
+        "progress": 0.17500416666666577,
+        "plantedAt": 1764934700776,
+        "entangledWith": null,
+        "autoPlantType": "voidViolet",
+        "mutation": null
+      }
+    ]
+  },
+  "stats": {
+    "totalClicks": 1660,
+    "totalEnergyEarned": 0,
+    "totalPlantsHarvested": 4367,
+    "quantumEventsWitnessed": 47,
+    "quantumBursts": 62,
+    "plantsEntangled": 282,
+    "highCoherenceTime": 134.23299999999875,
+    "clicksWithManyGens": 732,
+    "mutationsWitnessed": 304,
+    "playTime": 316962.96700117766,
+    "startDate": 1764761050871,
+    "realityLevel": 2,
+    "totalCollapses": 2,
+    "lastCollapsePlayTime": 164990.1330020862
+  },
+  "settings": {
+    "notificationsEnabled": true,
+    "particlesEnabled": true,
+    "autosaveInterval": 30,
+    "autoHarvestEnabled": true,
+    "autoPlantEnabled": true
+  },
+  "meta": {
+    "version": "1.0.0",
+    "lastSave": 1764934742786
+  },
+  "coherenceGraceTimer": -0.0010000000000002784,
+  "shownNarrativeMessages": [
+    100,
+    500,
+    1000,
+    2500,
+    5000,
+    10000,
+    25000,
+    50000,
+    100000,
+    250000,
+    50,
+    200,
+    350,
+    750,
+    1500,
+    2000,
+    3500,
+    7500,
+    15000,
+    20000,
+    35000,
+    75000,
+    150000,
+    200000,
+    300000,
+    400000,
+    500000,
+    600000,
+    750000,
+    900000,
+    1000000,
+    1500000,
+    2000000,
+    2500000,
+    3000000,
+    4000000,
+    5000000,
+    6000000,
+    7500000,
+    10000000,
+    15000000,
+    25000000,
+    50000000,
+    75000000,
+    100000000,
+    150000000,
+    200000000,
+    300000000
+  ],
+  "lastResourceGain": {
+    "resource": "energy",
+    "amount": 104.37926184761588
+  },
+  "coherenceWasAtMax": false,
+  "triggeredStories": [
+    1000,
+    10000,
+    100000,
+    1000000,
+    10000000,
+    100000000
+  ],
+  "shownConditionalMessages": [
+    "manyEntangled",
+    "muchKnowledge",
+    "firstCollapse",
+    "fullGarden",
+    "manyEvents",
+    "veryLowCoherence",
+    "manyClicks"
+  ]
+}
