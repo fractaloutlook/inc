@@ -13,7 +13,27 @@ const UI = (() => {
     function setupEventListeners() {
         // Quantum Core click
         document.getElementById('quantum-core').addEventListener('click', handleCoreClick);
-        
+
+        // Quantum Core hover for hoverclicker
+        let hoverInterval = null;
+        const quantumCore = document.getElementById('quantum-core');
+
+        quantumCore.addEventListener('mouseenter', () => {
+            const rate = UpgradeManager.getActiveHoverClickRate();
+            if (rate > 0 && !hoverInterval) {
+                hoverInterval = setInterval(() => {
+                    handleCoreClick();
+                }, 1000 / rate);
+            }
+        });
+
+        quantumCore.addEventListener('mouseleave', () => {
+            if (hoverInterval) {
+                clearInterval(hoverInterval);
+                hoverInterval = null;
+            }
+        });
+
         // Tab navigation
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => switchTab(btn.dataset.tab));
@@ -2063,7 +2083,8 @@ const UI = (() => {
         updateAutoProgress,
         addLogEntry,
         showNotification,
-        getSelectedPlotIndex
+        getSelectedPlotIndex,
+        handleCoreClick
     };
 })();
 

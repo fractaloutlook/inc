@@ -67,16 +67,31 @@ const GameLoop = (() => {
                 ResourceManager.add(resource, rate * deltaTime);
             }
         });
-        
+
+        // Clicklock auto-clicking (if upgrade is purchased)
+        if (UpgradeManager.isPurchased('clicklock')) {
+            const rate = UpgradeManager.getActiveHoverClickRate();
+            if (rate > 0) {
+                // Accumulate clicks based on delta time
+                if (!GameLoop.clicklockAccumulator) GameLoop.clicklockAccumulator = 0;
+                GameLoop.clicklockAccumulator += deltaTime * rate;
+
+                while (GameLoop.clicklockAccumulator >= 1) {
+                    UI.handleCoreClick();
+                    GameLoop.clicklockAccumulator -= 1;
+                }
+            }
+        }
+
         // Garden growth
         GardenManager.update(deltaTime);
-        
+
         // Quantum mechanics (observer effect, events, coherence)
         QuantumMechanics.update(deltaTime);
-        
+
         // Achievement checking
         AchievementManager.update(deltaTime);
-        
+
         // Update play time
         const playTime = StateManager.get('stats.playTime') || 0;
         StateManager.set('stats.playTime', playTime + deltaTime);

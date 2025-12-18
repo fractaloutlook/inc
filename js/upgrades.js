@@ -103,16 +103,32 @@ const UpgradeManager = (() => {
     
     function getGrowthMultiplier() {
         let mult = 1;
-        
+
         Object.values(GameData.upgrades).forEach(upgrade => {
             if (StateManager.get(`upgrades.${upgrade.id}.purchased`) && upgrade.effect?.growthSpeedMultiplier) {
                 mult *= upgrade.effect.growthSpeedMultiplier;
             }
         });
-        
+
         return mult;
     }
-    
+
+    function getHoverClickRate() {
+        if (isPurchased('clicklock')) {
+            // Clicklock means it's always active
+            return getActiveHoverClickRate();
+        }
+        // Only active when actually hovering
+        return 0;
+    }
+
+    function getActiveHoverClickRate() {
+        if (isPurchased('hoverclickerIII')) return 15;
+        if (isPurchased('hoverclickerII')) return 5;
+        if (isPurchased('hoverclickerI')) return 2;
+        return 0;
+    }
+
     return {
         isPurchased,
         isUnlocked,
@@ -120,6 +136,8 @@ const UpgradeManager = (() => {
         buy,
         getClickPower,
         getGrowthMultiplier,
+        getHoverClickRate,
+        getActiveHoverClickRate,
         on: events.on
     };
 })();

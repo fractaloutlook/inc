@@ -178,7 +178,53 @@ const GameData = {
             unlocked: false,
             purchased: false
         },
-        
+
+        // Hoverclicker Upgrades
+        hoverclickerI: {
+            id: 'hoverclickerI',
+            name: 'Passive Observation',
+            icon: '👀',
+            description: 'Hovering over the quantum core generates 2 clicks per second',
+            cost: { energy: 10000, time: 500 },
+            effect: { hoverClickRate: 2 },
+            requires: ['quantumClicking'],
+            unlocked: false,
+            purchased: false
+        },
+        hoverclickerII: {
+            id: 'hoverclickerII',
+            name: 'Active Surveillance',
+            icon: '🔍',
+            description: 'Hover clicking increased to 5 per second',
+            cost: { energy: 100000, time: 2000 },
+            effect: { hoverClickRate: 5 },
+            requires: ['hoverclickerI'],
+            unlocked: false,
+            purchased: false
+        },
+        hoverclickerIII: {
+            id: 'hoverclickerIII',
+            name: 'Constant Monitoring',
+            icon: '📡',
+            description: 'Hover clicking increased to 15 per second',
+            cost: { energy: 1000000, time: 10000 },
+            effect: { hoverClickRate: 15 },
+            requires: ['hoverclickerII'],
+            unlocked: false,
+            purchased: false
+        },
+        clicklock: {
+            id: 'clicklock',
+            name: 'Clicklock Protocol',
+            icon: '🔒',
+            description: 'Auto-clicking continues even without hovering. Effectively an auto-clicker!',
+            cost: { energy: 10000000, time: 50000, knowledge: 100 },
+            effect: { clicklockEnabled: true },
+            requires: ['hoverclickerIII'],
+            unlocked: false,
+            purchased: false
+        },
+
         // Seed & Garden Upgrades
         seedProduction: {
             id: 'seedProduction',
