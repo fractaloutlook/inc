@@ -207,10 +207,14 @@ const QuantumMechanics = (() => {
                 let energyGain = 0;
                 
                 plots.forEach((plot, index) => {
-                    if (plot.entangledWith !== null && plot.entangledWith > index) {
-                        pairs++;
-                        energyGain += 100 * pairs; // Scaling bonus per pair
-                    }
+                    const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+                    // Count each unique pair only once (check if partner index is greater than current)
+                    entangledWith.forEach(partnerId => {
+                        if (partnerId > index) {
+                            pairs++;
+                            energyGain += 100 * pairs; // Scaling bonus per pair
+                        }
+                    });
                 });
                 
                 if (pairs > 0) {
@@ -613,21 +617,22 @@ const QuantumMechanics = (() => {
                     observerFloatTimer = 0;
                     const speedBoost = Math.round(observerBonus * 100);
                     showObserverFloat(observedPlotIndex, `+${speedBoost}%`);
-                    
-                    // Also boost entangled partner!
-                    if (plot.entangledWith !== null) {
-                        const partner = StateManager.get(`garden.plots.${plot.entangledWith}`);
+
+                    // Also boost all entangled partners!
+                    const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+                    entangledWith.forEach(partnerIndex => {
+                        const partner = StateManager.get(`garden.plots.${partnerIndex}`);
                         if (partner && partner.plant && partner.progress < 1) {
                             const partnerData = GameData.generators[partner.plant];
                             const partnerBonusGrowth = (1 / partnerData.growthTime) * growthMult * observerBonus * 0.5 * deltaTime;
                             const partnerNewProgress = Math.min(1, partner.progress + partnerBonusGrowth);
-                            StateManager.set(`garden.plots.${plot.entangledWith}.progress`, partnerNewProgress);
-                            
+                            StateManager.set(`garden.plots.${partnerIndex}.progress`, partnerNewProgress);
+
                             // Show reduced boost on entangled partner
                             const partnerBoost = Math.round(observerBonus * 50);
-                            showObserverFloat(plot.entangledWith, `+${partnerBoost}%`, true);
+                            showObserverFloat(partnerIndex, `+${partnerBoost}%`, true);
                         }
-                    }
+                    });
                 }
             }
         }

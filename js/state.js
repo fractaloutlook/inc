@@ -39,7 +39,7 @@ const StateManager = (() => {
         
         // Initialize garden plots
         for (let i = 0; i < state.garden.size; i++) {
-            state.garden.plots.push({ plant: null, progress: 0, plantedAt: null });
+            state.garden.plots.push({ plant: null, progress: 0, plantedAt: null, entangledWith: [], autoPlantType: null, mutation: null });
         }
         
         // Set initial coherence
@@ -91,6 +91,16 @@ const StateManager = (() => {
         if (!state.stats.highCoherenceTime) state.stats.highCoherenceTime = 0;
         if (!state.stats.clicksWithManyGens) state.stats.clicksWithManyGens = 0;
         if (!state.stats.mutationsWitnessed) state.stats.mutationsWitnessed = 0;
+
+        // Migrate old single entanglement to array format
+        const plots = state.garden?.plots || [];
+        plots.forEach((plot, index) => {
+            if (plot.entangledWith !== null && !Array.isArray(plot.entangledWith)) {
+                state.garden.plots[index].entangledWith = [plot.entangledWith];
+            } else if (plot.entangledWith === null) {
+                state.garden.plots[index].entangledWith = [];
+            }
+        });
     }
     
     function calculateOfflineProgress() {

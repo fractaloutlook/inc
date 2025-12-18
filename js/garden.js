@@ -164,7 +164,7 @@ const GardenManager = (() => {
             plant: generatorId,
             progress: 0,
             plantedAt: Date.now(),
-            entangledWith: null,
+            entangledWith: [],
             autoPlantType: plot.autoPlantType || null,
             mutation: mutation
         });
@@ -188,56 +188,62 @@ const GardenManager = (() => {
         }
         
         // Apply entanglement bonus if applicable
-        if (plot.entangledWith !== null && UpgradeManager.isPurchased('deepEntanglement')) {
+        const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+        if (entangledWith.length > 0 && UpgradeManager.isPurchased('deepEntanglement')) {
             for (const resource in actualYield) {
                 actualYield[resource] = Math.floor(actualYield[resource] * 1.25);
             }
         }
-        
+
         // Grant harvest yield
         for (const [resource, amount] of Object.entries(actualYield)) {
             ResourceManager.add(resource, amount);
         }
-        
-        // Handle entangled partner
-        const partnerId = plot.entangledWith;
+
+        // Handle entangled partners - harvest all of them
         let partnerYield = null;
-        let partnerPlant = null;  // Track partner plant type for logging
-        
-        if (partnerId !== null) {
-            const partner = getPlot(partnerId);
-            if (partner && partner.plant && partner.entangledWith === plotIndex) {
-                partnerPlant = partner.plant;  // Save before clearing
-                
-                // Harvest partner too!
-                partnerYield = QuantumMechanics.collapseYield(partner.plant);
-                
-                // Apply partner's mutation bonus if any
-                if (partner.mutation) {
-                    partnerYield = applyMutationBonus(partnerYield, partner.mutation);
-                }
-                
-                if (UpgradeManager.isPurchased('deepEntanglement')) {
-                    for (const resource in partnerYield) {
-                        partnerYield[resource] = Math.floor(partnerYield[resource] * 1.25);
+        let partnerPlant = null;
+        let partnerId = null;
+
+        if (entangledWith.length > 0) {
+            // Harvest all entangled partners
+            entangledWith.forEach(partnerIndex => {
+                const partner = getPlot(partnerIndex);
+                if (partner && partner.plant && partner.progress >= 1) {
+                    const partnerData = GameData.generators[partner.plant];
+                    const pYield = QuantumMechanics.collapseYield(partner.plant);
+
+                    // Apply partner's mutation bonus if any
+                    let finalYield = pYield;
+                    if (partner.mutation) {
+                        finalYield = applyMutationBonus(finalYield, partner.mutation);
                     }
+
+                    if (UpgradeManager.isPurchased('deepEntanglement')) {
+                        for (const resource in finalYield) {
+                            finalYield[resource] = Math.floor(finalYield[resource] * 1.25);
+                        }
+                    }
+
+                    // Store first partner info for display
+                    if (!partnerYield) {
+                        partnerYield = finalYield;
+                        partnerPlant = partner.plant;
+                        partnerId = partnerIndex;
+                    }
+
+                    // Add resources for this partner
+                    Object.entries(finalYield).forEach(([resource, amount]) => {
+                        ResourceManager.add(resource, amount);
+                    });
+
+                    // Reset partner
+                    StateManager.set(`garden.plots.${partnerIndex}.plant`, null);
+                    StateManager.set(`garden.plots.${partnerIndex}.progress`, 0);
+                    StateManager.set(`garden.plots.${partnerIndex}.entangledWith`, []);
+                    StateManager.set(`garden.plots.${partnerIndex}.mutation`, null);
                 }
-                
-                for (const [resource, amount] of Object.entries(partnerYield)) {
-                    ResourceManager.add(resource, amount);
-                }
-                
-                // Clear partner plot but PRESERVE autoPlantType
-                const partnerAutoPlantType = partner.autoPlantType;
-                StateManager.set(`garden.plots.${partnerId}`, {
-                    plant: null,
-                    progress: 0,
-                    plantedAt: null,
-                    entangledWith: null,
-                    autoPlantType: partnerAutoPlantType || null,
-                    mutation: null
-                });
-            }
+            });
         }
         
         // Clear plot but PRESERVE autoPlantType
@@ -246,8 +252,9 @@ const GardenManager = (() => {
             plant: null,
             progress: 0,
             plantedAt: null,
-            entangledWith: null,
-            autoPlantType: autoPlantType || null
+            entangledWith: [],
+            autoPlantType: autoPlantType || null,
+            mutation: null
         });
         
         // Update stats
@@ -261,25 +268,44 @@ const GardenManager = (() => {
     function entangle(plotIndex1, plotIndex2) {
         const plot1 = getPlot(plotIndex1);
         const plot2 = getPlot(plotIndex2);
-        
+
         if (!plot1.plant || !plot2.plant) return false;
-        if (plot1.entangledWith !== null || plot2.entangledWith !== null) return false;
         if (plotIndex1 === plotIndex2) return false;
-        
+
+        // Get max entanglements (default 1, or 2 with quantum web upgrade)
+        const maxEntanglements = UpgradeManager.isPurchased('quantumWeb') ? 2 : 1;
+
+        // Initialize entangledWith as array if it's not already
+        const entangled1 = Array.isArray(plot1.entangledWith) ? plot1.entangledWith : (plot1.entangledWith !== null ? [plot1.entangledWith] : []);
+        const entangled2 = Array.isArray(plot2.entangledWith) ? plot2.entangledWith : (plot2.entangledWith !== null ? [plot2.entangledWith] : []);
+
+        // Check if either plot is at max entanglements
+        if (entangled1.length >= maxEntanglements || entangled2.length >= maxEntanglements) {
+            return false;
+        }
+
+        // Check if already entangled with each other
+        if (entangled1.includes(plotIndex2) || entangled2.includes(plotIndex1)) {
+            return false;
+        }
+
         // Consume entanglement thread
         if (ResourceManager.get('entanglement') < 1) {
             return false;
         }
         ResourceManager.spend('entanglement', 1);
-        
-        // Link them
-        StateManager.set(`garden.plots.${plotIndex1}.entangledWith`, plotIndex2);
-        StateManager.set(`garden.plots.${plotIndex2}.entangledWith`, plotIndex1);
-        
+
+        // Add to each other's arrays
+        entangled1.push(plotIndex2);
+        entangled2.push(plotIndex1);
+
+        StateManager.set(`garden.plots.${plotIndex1}.entangledWith`, entangled1);
+        StateManager.set(`garden.plots.${plotIndex2}.entangledWith`, entangled2);
+
         // Track stat
         const entangled = StateManager.get('stats.plantsEntangled') || 0;
         StateManager.set('stats.plantsEntangled', entangled + 2);
-        
+
         events.emit('entangled', { plot1: plotIndex1, plot2: plotIndex2 });
         return true;
     }
@@ -300,31 +326,40 @@ const GardenManager = (() => {
     function update(deltaTime) {
         const plots = StateManager.get('garden.plots') || [];
         const growthMult = UpgradeManager.getGrowthMultiplier();
-        
+
         plots.forEach((plot, index) => {
             if (plot.plant && plot.progress < 1) {
                 const data = GameData.generators[plot.plant];
                 let growthPerSecond = (1 / data.growthTime) * growthMult;
-                
+
                 // Entangled plants share growth progress
-                if (plot.entangledWith !== null) {
-                    const partner = plots[plot.entangledWith];
-                    if (partner && partner.plant) {
-                        // Average their growth rates
-                        const partnerData = GameData.generators[partner.plant];
-                        const partnerRate = (1 / partnerData.growthTime) * growthMult;
-                        growthPerSecond = (growthPerSecond + partnerRate) / 2;
-                    }
+                const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+                if (entangledWith.length > 0) {
+                    // Average growth rate with all entangled partners
+                    let totalRate = growthPerSecond;
+                    let count = 1;
+
+                    entangledWith.forEach(partnerIndex => {
+                        const partner = plots[partnerIndex];
+                        if (partner && partner.plant) {
+                            const partnerData = GameData.generators[partner.plant];
+                            const partnerRate = (1 / partnerData.growthTime) * growthMult;
+                            totalRate += partnerRate;
+                            count++;
+                        }
+                    });
+
+                    growthPerSecond = totalRate / count;
                 }
-                
+
                 const newProgress = Math.min(1, plot.progress + growthPerSecond * deltaTime);
                 StateManager.set(`garden.plots.${index}.progress`, newProgress);
-                
-                // Sync entangled partner
-                if (plot.entangledWith !== null) {
-                    StateManager.set(`garden.plots.${plot.entangledWith}.progress`, newProgress);
-                }
-                
+
+                // Sync all entangled partners
+                entangledWith.forEach(partnerIndex => {
+                    StateManager.set(`garden.plots.${partnerIndex}.progress`, newProgress);
+                });
+
                 if (newProgress >= 1 && plot.progress < 1) {
                     events.emit('ready', { plotIndex: index, plant: plot.plant });
                 }
@@ -360,15 +395,24 @@ const GardenManager = (() => {
         // At very low coherence, entanglement can break
         const coherence = ResourceManager.get('coherence') || 0;
         const breakChance = (10 - coherence) * 0.001; // Up to 1% per tick at 0% coherence
-        
+
         plots.forEach((plot, index) => {
-            if (plot.entangledWith !== null && Math.random() < breakChance) {
-                const partnerId = plot.entangledWith;
-                
-                // Break the link
-                StateManager.set(`garden.plots.${index}.entangledWith`, null);
-                StateManager.set(`garden.plots.${partnerId}.entangledWith`, null);
-                
+            const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+
+            if (entangledWith.length > 0 && Math.random() < breakChance) {
+                // Break all links for this plot
+                entangledWith.forEach(partnerId => {
+                    const partner = plots[partnerId];
+                    if (partner) {
+                        const partnerEntangled = Array.isArray(partner.entangledWith) ? partner.entangledWith : (partner.entangledWith !== null ? [partner.entangledWith] : []);
+                        const filtered = partnerEntangled.filter(id => id !== index);
+                        StateManager.set(`garden.plots.${partnerId}.entangledWith`, filtered);
+                    }
+                });
+
+                // Clear this plot's entanglements
+                StateManager.set(`garden.plots.${index}.entangledWith`, []);
+
                 UI.addLogEntry('⚠️ Entanglement collapsed due to low coherence!', 'warning');
                 UI.renderGarden();
             }
@@ -402,50 +446,51 @@ const GardenManager = (() => {
         readyIndices.forEach((plotIndex) => {
             // Skip if already harvested (e.g., via entanglement with earlier plant)
             if (alreadyHarvested.has(plotIndex)) return;
-            
+
             const plot = plots[plotIndex];
-            const entangledIndex = plot.entangledWith;
-            const entangledPlot = entangledIndex !== null ? plots[entangledIndex] : null;
-            const entangledIsReady = entangledPlot && entangledPlot.plant && entangledPlot.progress >= 1;
-            
-            // IMPORTANT: Decide NOW if partner should be harvested (before adding to set)
-            const shouldHarvestPartner = entangledIsReady && entangledIndex !== null;
-            
+            const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+
+            // Find all ready entangled partners
+            const readyPartners = entangledWith.filter(partnerIndex => {
+                const partner = plots[partnerIndex];
+                return partner && partner.plant && partner.progress >= 1;
+            });
+
             // Mark as harvested BEFORE scheduling (to prevent duplicate processing)
             alreadyHarvested.add(plotIndex);
-            if (shouldHarvestPartner) {
-                alreadyHarvested.add(entangledIndex);
-            }
-            
+            readyPartners.forEach(partnerIndex => {
+                alreadyHarvested.add(partnerIndex);
+            });
+
             // Schedule this harvest at the current animation step
             const delay = animationStep * 150;
-            
+
             setTimeout(() => {
                 // 1. Remove plant visually and show harvest effect
                 harvestPlotVisually(plotIndex);
-                
-                // If entangled partner is ready, harvest it visually at the SAME time
-                if (shouldHarvestPartner) {
-                    harvestPlotVisually(entangledIndex);
-                }
-                
-                // 2. Actually harvest (this handles entangled partner internally and clears entanglement state)
+
+                // If entangled partners are ready, harvest them visually at the SAME time
+                readyPartners.forEach(partnerIndex => {
+                    harvestPlotVisually(partnerIndex);
+                });
+
+                // 2. Actually harvest (this handles entangled partners internally and clears entanglement state)
                 const result = harvest(plotIndex);
-                
+
                 // 3. Update entanglement lines (AFTER harvest clears entanglement from state)
                 UI.updateEntanglementLines();
-                
+
                 // 4. Show floating numbers
                 if (result && result.yield) {
                     ResourceGainTracker.showHarvestFloat(plotIndex, result.yield);
                 }
-                if (result && result.partnerYield && entangledIndex !== null) {
-                    ResourceGainTracker.showHarvestFloat(entangledIndex, result.partnerYield);
+                if (result && result.partnerYield && result.partnerId !== null) {
+                    ResourceGainTracker.showHarvestFloat(result.partnerId, result.partnerYield);
                 }
-                
+
                 UI.renderResources();
             }, delay);
-            
+
             animationStep++;
         });
         
@@ -563,12 +608,12 @@ const GardenManager = (() => {
     function expandTo(newSize) {
         const currentSize = getSize();
         if (newSize <= currentSize) return;
-        
+
         const plots = StateManager.get('garden.plots') || [];
         for (let i = currentSize; i < newSize; i++) {
-            plots.push({ plant: null, progress: 0, plantedAt: null, entangledWith: null });
+            plots.push({ plant: null, progress: 0, plantedAt: null, entangledWith: [], autoPlantType: null, mutation: null });
         }
-        
+
         StateManager.set('garden.size', newSize);
         StateManager.set('garden.plots', plots);
         events.emit('expanded', newSize);

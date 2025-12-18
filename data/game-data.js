@@ -355,6 +355,17 @@ const GameData = {
             unlocked: false,
             purchased: false
         },
+        quantumWeb: {
+            id: 'quantumWeb',
+            name: 'Quantum Web',
+            icon: '🕸️',
+            description: 'Each plant can now have up to 2 entanglement links',
+            cost: { energy: 50000, knowledge: 200 },
+            effect: { maxEntanglements: 2 },
+            requires: ['entanglementBasics'],
+            unlocked: false,
+            purchased: false
+        },
         
         // Automation upgrades
         autoHarvest: {
@@ -740,8 +751,12 @@ const GameData = {
             icon: '🕸️',
             check: () => {
                 const plots = StateManager.get('garden.plots') || [];
-                const pairs = plots.filter(p => p.entangledWith !== null).length / 2;
-                return pairs >= 5;
+                // Count total entanglement links (each pair counts as 2 links, so divide by 2)
+                const totalLinks = plots.reduce((sum, p) => {
+                    const entangled = Array.isArray(p.entangledWith) ? p.entangledWith : (p.entangledWith !== null ? [p.entangledWith] : []);
+                    return sum + entangled.length;
+                }, 0);
+                return totalLinks / 2 >= 5;
             }
         },
         

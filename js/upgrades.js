@@ -129,6 +129,10 @@ const UpgradeManager = (() => {
         return 0;
     }
 
+    function getMaxEntanglements() {
+        return isPurchased('quantumWeb') ? 2 : 1;
+    }
+
     return {
         isPurchased,
         isUnlocked,
@@ -138,6 +142,7 @@ const UpgradeManager = (() => {
         getGrowthMultiplier,
         getHoverClickRate,
         getActiveHoverClickRate,
+        getMaxEntanglements,
         on: events.on
     };
 })();

@@ -945,13 +945,15 @@ const UI = (() => {
         const entangleMode = GardenManager.getEntanglementMode();
         
         for (let i = 0; i < size; i++) {
-            const plot = plots[i] || { plant: null, progress: 0, entangledWith: null };
+            const plot = plots[i] || { plant: null, progress: 0, entangledWith: [] };
             const hasPlant = plot.plant !== null;
             const isReady = hasPlant && plot.progress >= 1;
             const plantData = hasPlant ? GameData.generators[plot.plant] : null;
-            const isEntangled = plot.entangledWith !== null;
+            const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+            const isEntangled = entangledWith.length > 0;
             const isEntangleSource = entangleMode.active && entangleMode.source === i;
-            const canEntangle = entangleMode.active && entangleMode.source !== i && hasPlant && !isEntangled;
+            const maxEntanglements = UpgradeManager.isPurchased('quantumWeb') ? 2 : 1;
+            const canEntangle = entangleMode.active && entangleMode.source !== i && hasPlant && entangledWith.length < maxEntanglements;
             const mutation = plot.mutation ? GardenManager.getMutationInfo(plot.mutation) : null;
             
             let plotClass = 'garden-plot';
@@ -1146,42 +1148,46 @@ const UI = (() => {
         const drawnPairs = new Set();
 
         plots.forEach((plot, index) => {
-            if (plot.entangledWith !== null && !drawnPairs.has(`${Math.min(index, plot.entangledWith)}-${Math.max(index, plot.entangledWith)}`)) {
-                const plot1El = document.querySelector(`.garden-plot[data-index="${index}"]`);
-                const plot2El = document.querySelector(`.garden-plot[data-index="${plot.entangledWith}"]`);
+            const entangledWith = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
 
-                if (plot1El && plot2El) {
-                    // Use offsetLeft/offsetTop relative to grid (since grid is position:relative)
-                    const x1 = plot1El.offsetLeft + plot1El.offsetWidth / 2;
-                    const y1 = plot1El.offsetTop + plot1El.offsetHeight / 2;
-                    const x2 = plot2El.offsetLeft + plot2El.offsetWidth / 2;
-                    const y2 = plot2El.offsetTop + plot2El.offsetHeight / 2;
+            entangledWith.forEach(partnerId => {
+                if (!drawnPairs.has(`${Math.min(index, partnerId)}-${Math.max(index, partnerId)}`)) {
+                    const plot1El = document.querySelector(`.garden-plot[data-index="${index}"]`);
+                    const plot2El = document.querySelector(`.garden-plot[data-index="${partnerId}"]`);
 
-                    // Draw curved line between centers
-                    const midX = (x1 + x2) / 2;
-                    const midY = (y1 + y2) / 2;
-                    const dx = x2 - x1;
-                    const dy = y2 - y1;
-                    // Perpendicular offset for curve
-                    const curveFactor = 0.15;
-                    const ctrlX = midX - dy * curveFactor;
-                    const ctrlY = midY + dx * curveFactor;
+                    if (plot1El && plot2El) {
+                        // Use offsetLeft/offsetTop relative to grid (since grid is position:relative)
+                        const x1 = plot1El.offsetLeft + plot1El.offsetWidth / 2;
+                        const y1 = plot1El.offsetTop + plot1El.offsetHeight / 2;
+                        const x2 = plot2El.offsetLeft + plot2El.offsetWidth / 2;
+                        const y2 = plot2El.offsetTop + plot2El.offsetHeight / 2;
 
-                    svgContent += `<path class="entanglement-line" d="M ${x1} ${y1} Q ${ctrlX} ${ctrlY} ${x2} ${y2}" />`;
+                        // Draw curved line between centers
+                        const midX = (x1 + x2) / 2;
+                        const midY = (y1 + y2) / 2;
+                        const dx = x2 - x1;
+                        const dy = y2 - y1;
+                        // Perpendicular offset for curve
+                        const curveFactor = 0.15;
+                        const ctrlX = midX - dy * curveFactor;
+                        const ctrlY = midY + dx * curveFactor;
 
-                    // Add pulsing particles at each end
-                    svgContent += `<circle class="entanglement-particle" cx="${x1}" cy="${y1}" r="4">
-                        <animate attributeName="r" values="3;6;3" dur="1s" repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite" />
-                    </circle>`;
-                    svgContent += `<circle class="entanglement-particle" cx="${x2}" cy="${y2}" r="4">
-                        <animate attributeName="r" values="3;6;3" dur="1s" repeatCount="indefinite" begin="0.5s" />
-                        <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite" begin="0.5s" />
-                    </circle>`;
+                        svgContent += `<path class="entanglement-line" d="M ${x1} ${y1} Q ${ctrlX} ${ctrlY} ${x2} ${y2}" />`;
 
-                    drawnPairs.add(`${Math.min(index, plot.entangledWith)}-${Math.max(index, plot.entangledWith)}`);
+                        // Add pulsing particles at each end
+                        svgContent += `<circle class="entanglement-particle" cx="${x1}" cy="${y1}" r="4">
+                            <animate attributeName="r" values="3;6;3" dur="1s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite" />
+                        </circle>`;
+                        svgContent += `<circle class="entanglement-particle" cx="${x2}" cy="${y2}" r="4">
+                            <animate attributeName="r" values="3;6;3" dur="1s" repeatCount="indefinite" begin="0.5s" />
+                            <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite" begin="0.5s" />
+                        </circle>`;
+
+                        drawnPairs.add(`${Math.min(index, partnerId)}-${Math.max(index, partnerId)}`);
+                    }
                 }
-            }
+            });
         });
 
         svg.innerHTML = svgContent;
@@ -1278,12 +1284,15 @@ const UI = (() => {
     function handlePlotClick(index) {
         const plot = GardenManager.getPlot(index);
         const entangleMode = GardenManager.getEntanglementMode();
-        
+
         // Handle entanglement mode
         if (entangleMode.active) {
             if (entangleMode.source === null) {
                 // Selecting first plant
-                if (plot.plant && !plot.entangledWith) {
+                const entangled = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+                const maxEntanglements = UpgradeManager.isPurchased('quantumWeb') ? 2 : 1;
+
+                if (plot.plant && entangled.length < maxEntanglements) {
                     GardenManager.setEntanglementMode(true, index);
                     addLogEntry('Now select second plant to entangle with...', 'highlight');
                     addCursorEntanglementLine();
@@ -1291,7 +1300,10 @@ const UI = (() => {
                 }
             } else if (entangleMode.source !== index) {
                 // Selecting second plant
-                if (plot.plant && !plot.entangledWith) {
+                const entangled = Array.isArray(plot.entangledWith) ? plot.entangledWith : (plot.entangledWith !== null ? [plot.entangledWith] : []);
+                const maxEntanglements = UpgradeManager.isPurchased('quantumWeb') ? 2 : 1;
+
+                if (plot.plant && entangled.length < maxEntanglements) {
                     if (GardenManager.entangle(entangleMode.source, index)) {
                         addLogEntry('🔗 Plants entangled! They now share fate.', 'success');
                         GardenManager.setEntanglementMode(false, null);
