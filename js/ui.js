@@ -2,6 +2,8 @@
 // ============================================
 const UI = (() => {
     let selectedPlotIndex = null;
+    let cursorLineHandler = null;
+    let entanglementCursorLine = null;
     
     function initialize() {
         setupEventListeners();
@@ -438,6 +440,7 @@ const UI = (() => {
                     // Cancel entanglement mode
                     if (GardenManager.getEntanglementMode().active) {
                         GardenManager.setEntanglementMode(false);
+                        removeCursorEntanglementLine();
                         updateGardenControls();
                         renderGarden();
                     }
@@ -1043,35 +1046,97 @@ const UI = (() => {
         }
     }
     
+    function updateCursorEntanglementLine(event) {
+        const svg = document.getElementById('entanglement-lines');
+        if (!svg || !entanglementCursorLine) return;
+
+        const mode = GardenManager.getEntanglementMode();
+        if (!mode.active || mode.source === null) {
+            removeCursorEntanglementLine();
+            return;
+        }
+
+        const grid = document.getElementById('garden-grid');
+        const sourcePlotEl = document.querySelector(`.garden-plot[data-index="${mode.source}"]`);
+        if (!sourcePlotEl) return;
+
+        // Get source plot center
+        const x1 = sourcePlotEl.offsetLeft + sourcePlotEl.offsetWidth / 2;
+        const y1 = sourcePlotEl.offsetTop + sourcePlotEl.offsetHeight / 2;
+
+        // Get mouse position relative to grid
+        const gridRect = grid.getBoundingClientRect();
+        const x2 = event.clientX - gridRect.left;
+        const y2 = event.clientY - gridRect.top;
+
+        // Update the cursor line
+        entanglementCursorLine.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+    }
+
+    function addCursorEntanglementLine() {
+        const svg = document.getElementById('entanglement-lines');
+        if (!svg) return;
+
+        // Create the cursor line element if it doesn't exist
+        if (!entanglementCursorLine) {
+            entanglementCursorLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            entanglementCursorLine.setAttribute('class', 'entanglement-line');
+            entanglementCursorLine.setAttribute('style', 'stroke: var(--quantum-cyan); opacity: 0.6;');
+            svg.appendChild(entanglementCursorLine);
+        }
+
+        // Add mousemove listener
+        const centerPanel = document.getElementById('center-panel');
+        if (centerPanel && !cursorLineHandler) {
+            cursorLineHandler = (e) => updateCursorEntanglementLine(e);
+            centerPanel.addEventListener('mousemove', cursorLineHandler);
+        }
+    }
+
+    function removeCursorEntanglementLine() {
+        // Remove the line element
+        if (entanglementCursorLine && entanglementCursorLine.parentNode) {
+            entanglementCursorLine.parentNode.removeChild(entanglementCursorLine);
+            entanglementCursorLine = null;
+        }
+
+        // Remove the mousemove listener
+        const centerPanel = document.getElementById('center-panel');
+        if (centerPanel && cursorLineHandler) {
+            centerPanel.removeEventListener('mousemove', cursorLineHandler);
+            cursorLineHandler = null;
+        }
+    }
+
     function updateEntanglementLines() {
         const svg = document.getElementById('entanglement-lines');
         if (!svg) return;
-        
+
         const grid = document.getElementById('garden-grid');
         const section = document.getElementById('garden-section');
-        
+
         // Position SVG to cover the grid
         svg.style.left = grid.offsetLeft + 'px';
         svg.style.top = grid.offsetTop + 'px';
         svg.setAttribute('width', grid.offsetWidth);
         svg.setAttribute('height', grid.offsetHeight);
-        
+
         let svgContent = '';
         const plots = StateManager.get('garden.plots') || [];
         const drawnPairs = new Set();
-        
+
         plots.forEach((plot, index) => {
             if (plot.entangledWith !== null && !drawnPairs.has(`${Math.min(index, plot.entangledWith)}-${Math.max(index, plot.entangledWith)}`)) {
                 const plot1El = document.querySelector(`.garden-plot[data-index="${index}"]`);
                 const plot2El = document.querySelector(`.garden-plot[data-index="${plot.entangledWith}"]`);
-                
+
                 if (plot1El && plot2El) {
                     // Use offsetLeft/offsetTop relative to grid (since grid is position:relative)
                     const x1 = plot1El.offsetLeft + plot1El.offsetWidth / 2;
                     const y1 = plot1El.offsetTop + plot1El.offsetHeight / 2;
                     const x2 = plot2El.offsetLeft + plot2El.offsetWidth / 2;
                     const y2 = plot2El.offsetTop + plot2El.offsetHeight / 2;
-                    
+
                     // Draw curved line between centers
                     const midX = (x1 + x2) / 2;
                     const midY = (y1 + y2) / 2;
@@ -1081,9 +1146,9 @@ const UI = (() => {
                     const curveFactor = 0.15;
                     const ctrlX = midX - dy * curveFactor;
                     const ctrlY = midY + dx * curveFactor;
-                    
+
                     svgContent += `<path class="entanglement-line" d="M ${x1} ${y1} Q ${ctrlX} ${ctrlY} ${x2} ${y2}" />`;
-                    
+
                     // Add pulsing particles at each end
                     svgContent += `<circle class="entanglement-particle" cx="${x1}" cy="${y1}" r="4">
                         <animate attributeName="r" values="3;6;3" dur="1s" repeatCount="indefinite" />
@@ -1093,12 +1158,12 @@ const UI = (() => {
                         <animate attributeName="r" values="3;6;3" dur="1s" repeatCount="indefinite" begin="0.5s" />
                         <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite" begin="0.5s" />
                     </circle>`;
-                    
+
                     drawnPairs.add(`${Math.min(index, plot.entangledWith)}-${Math.max(index, plot.entangledWith)}`);
                 }
             }
         });
-        
+
         svg.innerHTML = svgContent;
     }
     
@@ -1181,6 +1246,7 @@ const UI = (() => {
         const mode = GardenManager.getEntanglementMode();
         if (mode.active) {
             GardenManager.setEntanglementMode(false, null);
+            removeCursorEntanglementLine();
             addLogEntry('Entanglement cancelled', '');
         } else {
             GardenManager.setEntanglementMode(true, null);
@@ -1200,6 +1266,7 @@ const UI = (() => {
                 if (plot.plant && !plot.entangledWith) {
                     GardenManager.setEntanglementMode(true, index);
                     addLogEntry('Now select second plant to entangle with...', 'highlight');
+                    addCursorEntanglementLine();
                     renderGarden();
                 }
             } else if (entangleMode.source !== index) {
@@ -1208,6 +1275,7 @@ const UI = (() => {
                     if (GardenManager.entangle(entangleMode.source, index)) {
                         addLogEntry('🔗 Plants entangled! They now share fate.', 'success');
                         GardenManager.setEntanglementMode(false, null);
+                        removeCursorEntanglementLine();
                         renderGarden();
                         renderResources();
                     } else {
