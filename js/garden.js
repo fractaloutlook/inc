@@ -7,6 +7,8 @@ const GardenManager = (() => {
     let autoHarvestTimer = 0;
     let autoPlantTimer = 0;
     let autoHarvestInProgress = false;
+    let autoEntanglerTimer = 0;
+    let formingEntanglements = new Map(); // plotIndex -> { target, progress, duration }
     
     function getPlot(index) {
         return StateManager.get(`garden.plots.${index}`);
@@ -328,7 +330,83 @@ const GardenManager = (() => {
     function getEntanglementMode() {
         return { active: entanglementMode, source: entanglementSource };
     }
-    
+
+    function findEntanglementCandidates() {
+        const plots = StateManager.get('garden.plots') || [];
+        const maxEntanglements = UpgradeManager.isPurchased('quantumWeb') ? 2 : 1;
+        const smartMode = UpgradeManager.isPurchased('smartEntangler');
+
+        const candidates = [];
+
+        plots.forEach((plot, index) => {
+            if (!plot.plant) return;
+
+            const entangled = Array.isArray(plot.entangledWith) ? plot.entangledWith : [];
+            if (entangled.length >= maxEntanglements) return;
+
+            candidates.push({ index, plot, entangledCount: entangled.length, type: plot.plant });
+        });
+
+        // Sort by priority
+        if (smartMode) {
+            // Smart mode: prioritize plants with same type nearby
+            candidates.sort((a, b) => {
+                const aHasSameType = candidates.some(c => c.type === a.type && c.index !== a.index);
+                const bHasSameType = candidates.some(c => c.type === b.type && c.index !== b.index);
+                if (aHasSameType && !bHasSameType) return -1;
+                if (!aHasSameType && bHasSameType) return 1;
+                return a.entangledCount - b.entangledCount;
+            });
+        } else {
+            // Normal mode: prioritize plants with fewer entanglements
+            candidates.sort((a, b) => a.entangledCount - b.entangledCount);
+        }
+
+        return candidates;
+    }
+
+    function tryAutoEntangle() {
+        const candidates = findEntanglementCandidates();
+        if (candidates.length < 2) return false;
+
+        const smartMode = UpgradeManager.isPurchased('smartEntangler');
+
+        // Try to find a good pair
+        for (let i = 0; i < candidates.length - 1; i++) {
+            const source = candidates[i];
+
+            // Find best target
+            for (let j = i + 1; j < candidates.length; j++) {
+                const target = candidates[j];
+
+                // Check if they can be entangled
+                const sourceEntangled = Array.isArray(source.plot.entangledWith) ? source.plot.entangledWith : [];
+                const targetEntangled = Array.isArray(target.plot.entangledWith) ? target.plot.entangledWith : [];
+
+                if (sourceEntangled.includes(target.index) || targetEntangled.includes(source.index)) {
+                    continue; // Already entangled
+                }
+
+                // Check resource availability
+                if (ResourceManager.get('entanglement') < 1) {
+                    return false;
+                }
+
+                // Start forming animation
+                formingEntanglements.set(source.index, {
+                    target: target.index,
+                    progress: 0,
+                    duration: 3.0 // 3 seconds animation
+                });
+
+                events.emit('formingEntanglement', { source: source.index, target: target.index });
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     function update(deltaTime) {
         const plots = StateManager.get('garden.plots') || [];
         const growthMult = UpgradeManager.getGrowthMultiplier();
@@ -394,6 +472,32 @@ const GardenManager = (() => {
                 autoPlantTimer = 0;
                 autoPlantAll();
             }
+        }
+
+        // Auto-entangler
+        if (UpgradeManager.isPurchased('autoEntangler') && StateManager.get('settings.autoEntanglerEnabled') !== false) {
+            const cooldown = UpgradeManager.isPurchased('smartEntangler') ? 20 : 30;
+            autoEntanglerTimer += deltaTime;
+
+            if (autoEntanglerTimer >= cooldown) {
+                autoEntanglerTimer = 0;
+                tryAutoEntangle();
+            }
+        }
+
+        // Update forming entanglements
+        if (formingEntanglements.size > 0) {
+            formingEntanglements.forEach((forming, sourceIndex) => {
+                forming.progress += deltaTime;
+
+                if (forming.progress >= forming.duration) {
+                    // Complete the entanglement
+                    if (entangle(sourceIndex, forming.target)) {
+                        events.emit('formedEntanglement', { source: sourceIndex, target: forming.target });
+                    }
+                    formingEntanglements.delete(sourceIndex);
+                }
+            });
         }
     }
     
@@ -667,6 +771,7 @@ const GardenManager = (() => {
         getPlantsGrowing,
         getPlantsReady,
         getAutoTimerProgress,
+        getFormingEntanglements: () => formingEntanglements,
         on: events.on
     };
 })();

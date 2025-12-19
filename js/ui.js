@@ -1190,6 +1190,47 @@ const UI = (() => {
             });
         });
 
+        // Draw forming entanglement animations
+        const formingEntanglements = GardenManager.getFormingEntanglements();
+        formingEntanglements.forEach((forming, sourceIndex) => {
+            const sourcePlotEl = document.querySelector(`.garden-plot[data-index="${sourceIndex}"]`);
+            const targetPlotEl = document.querySelector(`.garden-plot[data-index="${forming.target}"]`);
+
+            if (sourcePlotEl && targetPlotEl) {
+                const x1 = sourcePlotEl.offsetLeft + sourcePlotEl.offsetWidth / 2;
+                const y1 = sourcePlotEl.offsetTop + sourcePlotEl.offsetHeight / 2;
+                const x2 = targetPlotEl.offsetLeft + targetPlotEl.offsetWidth / 2;
+                const y2 = targetPlotEl.offsetTop + targetPlotEl.offsetHeight / 2;
+
+                const progress = forming.progress / forming.duration;
+                const opacity = 0.3 + (progress * 0.7); // Fade in from 0.3 to 1.0
+
+                // Curved line like normal entanglements
+                const midX = (x1 + x2) / 2;
+                const midY = (y1 + y2) / 2;
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+                const curveFactor = 0.15;
+                const ctrlX = midX - dy * curveFactor;
+                const ctrlY = midY + dx * curveFactor;
+
+                // Forming line (fuzzy/blurred appearance)
+                svgContent += `<path class="forming-entanglement-line"
+                    d="M ${x1} ${y1} Q ${ctrlX} ${ctrlY} ${x2} ${y2}"
+                    style="opacity: ${opacity}; filter: blur(${3 - progress * 2}px);" />`;
+
+                // Add pulsing particles showing formation
+                svgContent += `<circle cx="${x1}" cy="${y1}" r="6"
+                    fill="var(--quantum-cyan)" opacity="${opacity}">
+                    <animate attributeName="r" values="4;8;4" dur="1s" repeatCount="indefinite" />
+                </circle>`;
+                svgContent += `<circle cx="${x2}" cy="${y2}" r="6"
+                    fill="var(--quantum-cyan)" opacity="${opacity}">
+                    <animate attributeName="r" values="4;8;4" dur="1s" repeatCount="indefinite" />
+                </circle>`;
+            }
+        });
+
         svg.innerHTML = svgContent;
     }
     
@@ -1220,7 +1261,19 @@ const UI = (() => {
                 </div>
             `;
         }
-        
+
+        // Auto-Entangler toggle
+        if (UpgradeManager.isPurchased('autoEntangler')) {
+            const enabled = StateManager.get('settings.autoEntanglerEnabled') !== false;
+            const cooldown = UpgradeManager.isPurchased('smartEntangler') ? 20 : 30;
+            html += `
+                <div class="auto-toggle ${enabled ? 'active' : ''}" id="toggle-autoentangler" title="Auto-entangle unentangled plants every ${cooldown}s">
+                    <span class="toggle-indicator"></span>
+                    <span>🔮 Entangler</span>
+                </div>
+            `;
+        }
+
         // Entangle button
         if (GardenManager.isEntanglementUnlocked()) {
             const mode = GardenManager.getEntanglementMode();
@@ -1256,7 +1309,17 @@ const UI = (() => {
                 addLogEntry(`Auto-plant ${!current ? 'enabled' : 'disabled'}`, '');
             });
         }
-        
+
+        const autoEntanglerBtn = document.getElementById('toggle-autoentangler');
+        if (autoEntanglerBtn) {
+            autoEntanglerBtn.addEventListener('click', () => {
+                const current = StateManager.get('settings.autoEntanglerEnabled') !== false;
+                StateManager.set('settings.autoEntanglerEnabled', !current);
+                updateGardenControls();
+                addLogEntry(`Auto-entangler ${!current ? 'enabled' : 'disabled'}`, '');
+            });
+        }
+
         const entangleBtn = document.getElementById('entangle-btn');
         if (entangleBtn) {
             entangleBtn.addEventListener('click', toggleEntangleMode);

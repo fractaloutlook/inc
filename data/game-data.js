@@ -366,7 +366,29 @@ const GameData = {
             unlocked: false,
             purchased: false
         },
-        
+        autoEntangler: {
+            id: 'autoEntangler',
+            name: 'Quantum Matchmaker',
+            icon: '🔮',
+            description: 'Automatically entangles unentangled plants every 30 seconds. Shows a forming animation.',
+            cost: { energy: 500000, knowledge: 500 },
+            effect: { autoEntangler: true },
+            requires: ['quantumWeb'],
+            unlocked: false,
+            purchased: false
+        },
+        smartEntangler: {
+            id: 'smartEntangler',
+            name: 'Smart Entangler',
+            icon: '🧠',
+            description: 'Auto-entangler prioritizes same-type plants and reduces cooldown to 20 seconds',
+            cost: { energy: 5000000, knowledge: 2000 },
+            effect: { smartEntangler: true },
+            requires: ['autoEntangler'],
+            unlocked: false,
+            purchased: false
+        },
+
         // Automation upgrades
         autoHarvest: {
             id: 'autoHarvest',

@@ -1749,6 +1749,21 @@ html, body {
     filter: drop-shadow(0 0 6px var(--quantum-orange));
 }
 
+/* Forming entanglement animation */
+.forming-entanglement-line {
+    stroke: var(--quantum-cyan);
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 8 4;
+    animation: forming-flow 1.5s linear infinite;
+}
+
+@keyframes forming-flow {
+    0% { stroke-dashoffset: 0; opacity: 0.4; }
+    50% { opacity: 0.8; }
+    100% { stroke-dashoffset: -24; opacity: 0.4; }
+}
+
 #garden-section {
     position: relative;
 }
