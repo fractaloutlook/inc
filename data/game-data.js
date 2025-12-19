@@ -895,6 +895,88 @@ const GameData = {
             icon: '∞',
             secret: true,
             check: () => StateManager.get('resources.energy.total') >= 1000000000000
+        },
+
+        // Pattern achievements
+        horizontalLine: {
+            id: 'horizontalLine',
+            name: 'Event Horizon',
+            description: 'Create a horizontal line of entanglements',
+            icon: '━',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'horizontalLine');
+            }
+        },
+        verticalLine: {
+            id: 'verticalLine',
+            name: 'Quantum Pillar',
+            description: 'Create a vertical line of entanglements',
+            icon: '┃',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'verticalLine');
+            }
+        },
+        diagonalLine: {
+            id: 'diagonalLine',
+            name: 'Planck Slope',
+            description: 'Create a diagonal line of entanglements',
+            icon: '╱',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'diagonal');
+            }
+        },
+        squarePattern: {
+            id: 'squarePattern',
+            name: 'Stable State',
+            description: 'Connect all four corner plants in a square',
+            icon: '⬜',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'square');
+            }
+        },
+        trianglePattern: {
+            id: 'trianglePattern',
+            name: 'Three-Body Solution',
+            description: 'Create a triangle of entanglements',
+            icon: '△',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'triangle');
+            }
+        },
+        xPattern: {
+            id: 'xPattern',
+            name: 'Crossroads',
+            description: 'Create an X pattern with both diagonals',
+            icon: '✕',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'xShape');
+            }
+        },
+        plusPattern: {
+            id: 'plusPattern',
+            name: 'Junction',
+            description: 'Create a plus/cross pattern through the center',
+            icon: '✚',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'plus');
+            }
+        },
+        borderPattern: {
+            id: 'borderPattern',
+            name: 'Containment Field',
+            description: 'Connect all border plants in a loop',
+            icon: '⊞',
+            check: () => {
+                const patterns = PatternDetector.detectPatterns();
+                return patterns.some(p => p.pattern === 'border');
+            }
         }
     }
 };

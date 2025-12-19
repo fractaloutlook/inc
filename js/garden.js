@@ -307,6 +307,12 @@ const GardenManager = (() => {
         StateManager.set('stats.plantsEntangled', entangled + 2);
 
         events.emit('entangled', { plot1: plotIndex1, plot2: plotIndex2 });
+
+        // Check for pattern achievements
+        setTimeout(() => {
+            AchievementManager.checkAll();
+        }, 100);
+
         return true;
     }
     

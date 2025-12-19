@@ -1352,6 +1352,27 @@ html, body {
     font-weight: 500;
 }
 
+/* Pattern Catalog Styles */
+.pattern-discovered {
+    color: var(--quantum-gold);
+    background: rgba(255, 213, 79, 0.1);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin: 2px 0;
+    transition: var(--transition-fast);
+}
+
+.pattern-discovered:hover {
+    background: rgba(255, 213, 79, 0.2);
+}
+
+.pattern-locked {
+    opacity: 0.4;
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin: 2px 0;
+}
+
 /* Prestige / Reality Collapse UI */
 .prestige-section {
     background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(75, 0, 130, 0.15));

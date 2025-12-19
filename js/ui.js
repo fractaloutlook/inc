@@ -1643,6 +1643,42 @@ const UI = (() => {
             `;
         }
         
+        // Get pattern detection results
+        const patterns = PatternDetector.detectPatterns();
+        const discoveredPatterns = new Set(patterns.map(p => p.pattern));
+
+        const allPatterns = [
+            { id: 'horizontalLine', name: 'Event Horizon', icon: '━' },
+            { id: 'verticalLine', name: 'Quantum Pillar', icon: '┃' },
+            { id: 'diagonal', name: 'Planck Slope', icon: '╱' },
+            { id: 'square', name: 'Stable State', icon: '⬜' },
+            { id: 'triangle', name: 'Three-Body Solution', icon: '△' },
+            { id: 'xShape', name: 'Crossroads', icon: '✕' },
+            { id: 'plus', name: 'Junction', icon: '✚' },
+            { id: 'border', name: 'Containment Field', icon: '⊞' }
+        ];
+
+        const discoveredCount = allPatterns.filter(p => discoveredPatterns.has(p.id)).length;
+
+        let patternCatalogHtml = '';
+        if (UpgradeManager.isPurchased('entanglementBasics')) {
+            patternCatalogHtml = `
+                <div class="stat-group">
+                    <h4>🌟 Pattern Catalog (${discoveredCount}/${allPatterns.length})</h4>
+                    ${allPatterns.map(p => {
+                        const found = discoveredPatterns.has(p.id);
+                        const className = found ? 'pattern-discovered' : 'pattern-locked';
+                        return `
+                            <div class="stat-row ${className}">
+                                <span class="stat-label">${p.icon} ${p.name}</span>
+                                <span class="stat-value">${found ? '✓ Found' : '—'}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
         container.innerHTML = `
             ${prestigeHtml}
             <div class="stat-group">
@@ -1660,6 +1696,7 @@ const UI = (() => {
                     `).join('')}
                 </div>
             </div>
+            ${patternCatalogHtml}
             <div class="stat-group">
                 <h4>General</h4>
                 <div class="stat-row">
